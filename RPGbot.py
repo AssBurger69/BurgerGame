@@ -22,12 +22,12 @@ def game_parameters():
    global parameters
 
    parameters = Parameters.BaseParameters(10, 0, False)
-   loot = Drop.Loot('Пусто')
-   bosses = Characters.BossList('makap')
+   loot = Drop.Loot(MyStrings.Text.empty_text.value)
+   bosses = Characters.BossList(MyStrings.Text.empty_text.value)
 
 def stas_passive(x):
    #чек на возвращение урона Черного Стаса
-   return_check = boss.name == 'Черный Стас' and chance(x) == True
+   return_check = boss.name == MyStrings.Text.black_stas_name.value and chance(x) == True
    return return_check
    
 def versus_stats(x, y):
@@ -91,19 +91,19 @@ def char_description(message):
    global char
    
    if message.text == MyStrings.Text.mitya_name.value:
-      char = Characters.Char(MyStrings.Text.mitya_name.value, 800, 100, 0, 0, 20, MyStrings.Text.mitya_description_text.value ,'Бахнуть элексир', '👨‍🔬')
+      char = Characters.Char(MyStrings.Text.mitya_name.value, 800, 100, 0, 0, 20, MyStrings.Text.mitya_description_text.value, MyStrings.Text.mitya_skill_button_text.value, MyStrings.Text.mitya_icon.value)
       
    elif message.text == MyStrings.Text.sanya_name.value:
-      char = Characters.Char(MyStrings.Text.sanya_name.value, 1000, 200, 30, 0, 0, MyStrings.Text.sanya_description_text.value,'Кинуть ножницы', '💇')
+      char = Characters.Char(MyStrings.Text.sanya_name.value, 1000, 200, 30, 0, 0, MyStrings.Text.sanya_description_text.value, MyStrings.Text.sanya_skill_button_text.value, MyStrings.Text.sanya_icon.value)
       
    elif message.text == MyStrings.Text.toshik_name.value:
-      char = Characters.Char(MyStrings.Text.toshik_name.value, 1500, 100, 0, 0, 0, MyStrings.Text.temich_description_text.value, 'Сесть медитировать', '🦹‍♂️')
+      char = Characters.Char(MyStrings.Text.toshik_name.value, 1500, 100, 0, 0, 0, MyStrings.Text.temich_description_text.value, MyStrings.Text.toshik_skill_button_text.value, MyStrings.Text.toshik_icon.value)
       
    elif message.text == MyStrings.Text.kolya_name.value:
-      char = Characters.Char(MyStrings.Text.kolya_name.value, 1200, 100, 0, 0, 0, MyStrings.Text.kolya_description_text.value, 'Хакнуть урон', '👨‍💻')
+      char = Characters.Char(MyStrings.Text.kolya_name.value, 1200, 100, 0, 0, 0, MyStrings.Text.kolya_description_text.value, MyStrings.Text.kolya_skill_button_text.value, MyStrings.Text.kolya_icon.value)
       
    elif message.text == MyStrings.Text.temich_name.value:
-      char = Characters.Char(MyStrings.Text.temich_name.value, 800, 150, 0, 15, 0, MyStrings.Text.temich_description_text.value, 'Навести суету', '🤷‍♂️')
+      char = Characters.Char(MyStrings.Text.temich_name.value, 800, 150, 0, 15, 0, MyStrings.Text.temich_description_text.value, MyStrings.Text.temich_skill_button_text.value, MyStrings.Text.temich_icon.value)
 
    bot.send_message(message.from_user.id, char.name + char.icon + '\n' + char.description)
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
@@ -116,7 +116,7 @@ def shop_choice(message):
    if message.text == MyStrings.Text.another_char_key_text.value:
       bot.send_message(message.from_user.id, 'Напиши мне что-нибудь, потом это подправлю')
       bot.register_next_step_handler(message, get_character)
-   elif message.text == MyStrings.Text.ready_key_text.value or 'Я молодец':
+   elif message.text == MyStrings.Text.ready_key_text.value or MyStrings.Text.victory_button_text.value:
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
       keyboard.add(MyStrings.Text.stas_shop_name.value, MyStrings.Text.bratishkino_shop_name.value)
       msg = bot.send_message(message.from_user.id, text = MyStrings.Text.shop_choice_text.value, reply_markup=keyboard)
@@ -334,7 +334,7 @@ def boss_choice(message):
    #проверка в розыске ли персонаж
    if parameters.wanted_level == True:
       boss.resurrection = True
-      bot.send_message(message.from_user.id, 'Босс был усилен стражами порядка')
+      bot.send_message(message.from_user.id, MyStrings.Text.boss_police_upgrade_text.value)
 
    #проверка на является ли персонаж Сашей Шлякиным при битве с Сашей Шлякиным
    if boss.name == MyStrings.Text.sasha_name.value and char.name != MyStrings.Text.sanya_name.value:
@@ -352,19 +352,19 @@ def location_choice(x):
    global loc
 
    if x == MyStrings.Text.kolbas_name.value:
-      loc = Locations.Location(10, MyStrings.Text.kolbas_description.value, '📚')
+      loc = Locations.Location(10, MyStrings.Text.kolbas_description.value, MyStrings.Text.kolbas_icon.value)
       char.hp -= char.hp * loc.value_1 // 100
       if boss.name == MyStrings.Text.doner_name.value:
          boss.hp += 500
          loc.loc_effect_msg = MyStrings.Text.doner_kolbas_text.value
    
    elif x == MyStrings.Text.polazna_name.value:
-      loc = Locations.SuperLocation(20, 10, MyStrings.Text.polazna_description.value, '⛺️')
+      loc = Locations.SuperLocation(20, 10, MyStrings.Text.polazna_description.value, MyStrings.Text.polazna_icon.value)
       char.hp += char.hp * loc.value_1 // 100
       char.dmg -= char.dmg * loc.value_2 // 100
 
    elif x == MyStrings.Text.god_city_name.value:
-      loc = Locations.UltraLocation(10, 10, 10, MyStrings.Text.god_city_description.value, '⚓️')
+      loc = Locations.UltraLocation(10, 10, 10, MyStrings.Text.god_city_description.value, MyStrings.Text.god_city_icon.value)
       char.hp += char.hp * loc.value_1 // 100
       char.dmg += char.dmg * loc.value_2 // 100
       char.crit += loc.value_3
@@ -375,7 +375,7 @@ def location_choice(x):
          loc.loc_effect_msg = MyStrings.Text.chaikovskii_god_city_text.value
 
    elif x == MyStrings.Text.bad_trip_name.value:
-      loc = Locations.SuperLocation(20, 20, MyStrings.Text.bad_trip_description.value, '😵')
+      loc = Locations.SuperLocation(20, 20, MyStrings.Text.bad_trip_description.value, MyStrings.Text.bad_trip_icon.value)
       if char.name == MyStrings.Text.kolya_name.value:
          char.hp_baff(300)
          char.dmg_baff(100)
@@ -388,7 +388,7 @@ def location_choice(x):
          loc.loc_effect_msg = MyStrings.Text.bad_trip_effect_text.value
       
    elif x == MyStrings.Text.molebka_name.value:
-      loc = Locations.SuperLocation(20, 10, MyStrings.Text.molebka_description.value, '🎇')
+      loc = Locations.SuperLocation(20, 10, MyStrings.Text.molebka_description.value, MyStrings.Text.molebka_icon.value)
       if char.name == MyStrings.Text.toshik_name.value:
          char.hp += char.hp * loc.value_1 // 100
          char.dmg += char.dmg * loc.value_2 // 100
@@ -399,12 +399,12 @@ def location_choice(x):
          loc.loc_effect_msg = MyStrings.Text.molebka_effect_text.value
       
    elif x == MyStrings.Text.army_name.value:
-      loc = Locations.SuperLocation(50, 30, MyStrings.Text.army_description.value, '🧨')
+      loc = Locations.SuperLocation(50, 30, MyStrings.Text.army_description.value, MyStrings.Text.army_icon.value)
       char.hp -= char.hp * loc.value_1 // 100
       char.dmg += char.dmg * loc.value_2 // 100
 
    elif x == MyStrings.Text.drochilnya_name.value:
-      loc = Locations.SuperLocation(10, 10, MyStrings.Text.drochilnya_description.value, '💦')
+      loc = Locations.SuperLocation(10, 10, MyStrings.Text.drochilnya_description.value, MyStrings.Text.drochilnya_icon.value)
       char.dmg += char.dmg * loc.value_1 // 100
       char.crit_baff(loc.value_2)
       if char.name == MyStrings.Text.sanya_name.value:
@@ -412,7 +412,7 @@ def location_choice(x):
          loc.loc_effect_msg = MyStrings.Text.sanya_drochilnya_text.value
 
    elif x == MyStrings.Text.stage25_name.value:
-      loc = Locations.SuperLocation(50, 10, MyStrings.Text.stage25_description.value, '💀')
+      loc = Locations.SuperLocation(50, 10, MyStrings.Text.stage25_description.value, MyStrings.Text.stage25_icon.value)
       char.dmg -= char.dmg * loc.value_1 // 100
       char.crit_debaff(loc.value_2)
       if char.name == MyStrings.Text.kolya_name.value:
@@ -472,7 +472,7 @@ def boss_prelude(message):
    elif boss.name == MyStrings.Text.viv_name.viv_name and char.item == 'Травмат Володи':
       char.hp_debaff(300)
       char.bleeding = True
-      char.item = 'Пусто'
+      char.item = MyStrings.Text.empty_text.value
       bot.send_message(message.from_user.id, 'Володя забрал свой травмат!\n' + char.icon + '-300❤️🩸')
       start_fight(message)
 
@@ -664,107 +664,107 @@ def item_using(x):
    #использование предмета персонажа
    global item_dscr
 
-   if x == 'Жигули':
-      if boss.name == 'Донер Кебаб':
+   if x == MyStrings.Text.zhiguli_name.vaccine_name:
+      if boss.name == MyStrings.Text.doner_name.value:
          boss.hp_baff(150)
          item_dscr = 'Пизда твоему бухлу, Донер его выпил\n' + boss.icon + '+150🖤'
       else:
          char.hp_baff(150)
-         item_dscr = 'Для истинных ценителей\n+150❤️'
+         item_dscr = MyStrings.Text.zhiguli_description.value
 
-   elif x == 'Сидр':
-      if boss.name == 'Донер Кебаб':
+   elif x == MyStrings.Text.sidr_name.value:
+      if boss.name == MyStrings.Text.doner_name.value:
          boss.hp_baff(300)
          item_dscr = 'Пизда твоему бухлу, Донер его выпил\n' + boss.icon + '+300🖤'
       else:
          char.hp_baff(300)
-         item_dscr = 'Питерская эстетика\n+300❤️'
+         item_dscr = MyStrings.Text.sidr_description.value
 
-   elif x == 'Балабаха Багбира':
-      if boss.name == 'Донер Кебаб':
+   elif x == MyStrings.Text.bagbeer_name.value:
+      if boss.name == MyStrings.Text.doner_name.value:
          boss.hp_baff(500)
          item_dscr = 'Пизда твоему бухлу, Донер его выпил\n' + boss.icon + '+500🖤'
       else:
          char.hp_baff(500)
-         item_dscr = 'Со вкусом молодости\n+500❤️'
+         item_dscr = MyStrings.Text.bagbeer_description.value
 
-   elif x == 'Святая минералочка':
+   elif x == MyStrings.Text.mineralka_name.value:
       char.regen = 100
-      item_dscr = 'Освежающий глоток придал тебе сил\n' + char.icon + ' + 💕'
+      item_dscr = MyStrings.Text.mineralka_description.value + char.icon + ' + 💕'
 
-   elif x == 'Лезвия бритвы':
+   elif x == MyStrings.Text.lezvie_name.value:
       boss.hp_debaff(150)
       boss.bleeding = True
-      item_dscr = 'Бросок в глаз! Враг травмирован\n' + boss.icon + '-150🖤🩸'
+      item_dscr = MyStrings.Text.lezvie_description.value + boss.icon + '-150🖤🩸'
 
-   elif x == 'Травмат Володи':
+   elif x == MyStrings.Text.travmat_name.value:
       boss.hp_debaff(300)
       boss.bleeding = True
-      item_dscr = 'Документы должны быть всегда с собой\n' + boss.icon + '-300🖤🩸'
+      item_dscr = MyStrings.Text.travmat_description.value + boss.icon + '-300🖤🩸'
 
-   elif x == '2.5-литровка Колы':
+   elif x == MyStrings.Text.cola_name.value:
       boss.hp_debaff(500)
-      item_dscr = 'Грозное оружие судного нового года\n' + boss.icon + '-500🖤'
+      item_dscr = MyStrings.Text.cola_description.value + boss.icon + '-500🖤'
 
-   elif x == 'Потный носок':
-      if boss.name == 'Донер Кебаб':
+   elif x == MyStrings.Text.sick_sock_name.value:
+      if boss.name == MyStrings.Text.doner_name.value:
          boss.hp_baff(50)
          boss.regen = 100
          item_dscr = 'Не стоило травить Донера\n' + boss.icon + '+50🖤💕'
       else:
          boss.hp_debaff(50)
          boss.poison = True
-         item_dscr = boss.name + ' поймал твой носок лицом\n' + boss.icon + '-50🖤🦠'
+         item_dscr = boss.name + MyStrings.Text.sick_sock_description.value + boss.icon + '-50🖤🦠'
 
-   elif x == 'Блевотный харчок':
-      if boss.name == 'Донер Кебаб':
+   elif x == MyStrings.Text.harchok_name.value:
+      if boss.name == MyStrings.Text.doner_name.value:
          boss.hp_baff(200)
          boss.regen = 100
          item_dscr = 'Не стоило травить Донера\n' + boss.icon + '+200🖤💕'
       else:
          boss.hp_debaff(200)
          boss.poison = True
-         item_dscr = 'Пздц ты жесткий, нашел чем замастить врага\n' + boss.icon + '-200🖤🦠'
+         item_dscr = MyStrings.Text.harchok_description.value + boss.icon + '-200🖤🦠'
 
-   elif x == 'Рампаг':
-      if boss.name == 'Донер Кебаб':
+   elif x == MyStrings.Text.rampag_name.value:
+      if boss.name == MyStrings.Text.doner_name.value:
          boss.hp = 0
-         item_dscr = 'Рампаг заходит сзади! Моментальная смерть для Донера!'
+         item_dscr = MyStrings.Text.doner_rampag_text.value
       else:
          boss.stan_timer = 1
-         item_dscr = 'Удар Рампагом! Враг в отрубе\n👿 + 💤'
+         item_dscr = MyStrings.Text.rampag_description.value
 
-   elif x == 'Золотые Ролексы':
+   elif x == MyStrings.Text.rolex_name.value:
       char.cooldown = 0
-      item_dscr = 'Дороговаты, зато кулдаун скилла сбросили'
+      item_dscr = MyStrings.Text.rolex_description.value
 
-   elif x == 'Вакцина':
+   elif x == MyStrings.Text.vaccine_name.value:
       char.poison = False
       char.bleeding = False
-      item_dscr = 'Лечит от всех твоих недугов\n❌🩸🦠❌'
+      item_dscr = MyStrings.Text.vaccine_description.value
 
-   elif x == 'Шига':
-      foods = 'Сочник со сгухой', 'Дубайский шаурмец', 'Мясо Андрея', '5 пицц'
+   elif x == MyStrings.Text.shiga_name.value:
+      foods = MyStrings.Text.sochnik_name.value, MyStrings.Text.dubai_name.value, MyStrings.Text.dron_meat_name.value, MyStrings.Text.pizza5_name.value
       cross_check = [x for x in foods if x in char.all_items]
       if len(cross_check) == 0:
          char.hp_debaff(200)
          char.dmg_baff(100)
-         item_dscr = 'Душисто залетела, но теперь ты голоден\n-200❤️\n+100⚔️'
+         item_dscr = MyStrings.Text.shiga_debuff_description.value
       elif len(cross_check) > 0:
          char.hp_baff(200)
          char.dmg_baff(100)
-         item_dscr = 'Душисто залетела, а еда спасла тебя от голода\n+200❤️\n+100⚔️'
+         item_dscr = MyStrings.Text.shiga_buff_description.value
 
-   elif x == 'Мадам':
+   elif x == MyStrings.Text.madam_name.value:
       boss.dmg -= boss.dmg * 50 // 100
-      item_dscr = 'Мадам умиротворяет всех вокруг\n' + boss.icon + '-50%⚔️'
+      item_dscr = MyStrings.Text.madam_description.value + boss.icon + '-50%⚔️'
 
 def boss_startskill(message):
    #вывод сообщения о примененном навыке босса в конце раунда
-   if boss.name == 'Следователь':
+   if boss.name == MyStrings.Text.sledovatel_name.value:
       bot.send_message(message.from_user.id, '⛓Степень упаковки ' + str(char.busted_level) + '%⛓')
    
-   elif boss.name == 'Дрон':
+   elif boss.name == MyStrings.Text.dron_name.value:
       bot.send_message(message.from_user.id, '🤬Риск обиды ' + str(boss.obida_level) + '%🤬')
 
 def char_attack(message):
@@ -791,9 +791,9 @@ def boss_returnal(message):
 
 def boss_attack(message):
    #атака босса
-   if char.name == 'Митя' and boss.name == 'Инквизиция':
+   if char.name == MyStrings.Text.mitya_name.value and boss.name == MyStrings.Text.inkvisizia_name.value:
       char.hp += char.hp * 50 // 100
-      bot.send_message(message.from_user.id, 'Вместо урона Митя в инквизиции становится сильнее, она не может причинить ему урон!\n+50%❤️')
+      bot.send_message(message.from_user.id, MyStrings.Text.mitya_inkvisizia_text.value)
    
    else:
       if chance(char.miss) == True:
@@ -820,16 +820,16 @@ def vampire(message):
 def boss_endskill(message):  
    #применение скилла босса в конце раунда
 
-   if boss.name == 'Чайковский' and boss.resurrection == True and boss.hp <= 200:
+   if boss.name == MyStrings.Text.chaikovskii_name.value and boss.resurrection == True and boss.hp <= 200:
       boss.resurrection = False
       boss.hp_baff(800)
       bot.send_message(message.from_user.id, 'Брат! Не засыпай!\n' + boss.icon + '+800🖤')
    
-   elif boss.name == 'Вив':
+   elif boss.name == MyStrings.Text.viv_name.value:
       boss.dmg_baff(100)
       bot.send_message(message.from_user.id, 'Бассы подъехали!\n' + boss.icon + '+100⚔️')
 
-   elif boss.name == 'Котенок-тролль' and chance(boss.endskill_value) == True:
+   elif boss.name == MyStrings.Text.kitty_name.value and chance(boss.endskill_value) == True:
       kitty_choice = random.randint(0, 11)
       if kitty_choice > 5:
          char.stan_timer = 1
@@ -839,51 +839,51 @@ def boss_endskill(message):
          char.bleeding = True
          bot.send_message(message.from_user.id, 'Зацепка когтями!\n' + char.icon + '-200❤️🩸')
    
-   elif boss.name == 'Пьяный Леха':
+   elif boss.name == MyStrings.Text.drunk_leha_name.value:
       boss.hp += boss.hp * 50 // 100
       boss.dmg += boss.dmg * 50 // 100
-      bot.send_message(message.from_user.id, 'Леха бухает! Остановите его!\n' + boss.icon + '+50%🖤 и +50%⚔️')
+      bot.send_message(message.from_user.id, MyStrings.Text.drunk_leha_skill_text.value + boss.icon + '+50%🖤 и +50%⚔️')
 
-   elif boss.name == 'Доктор Леха' and chance(boss.endskill_value) == True:
+   elif boss.name == MyStrings.Text.doc_leha_name.value and chance(boss.endskill_value) == True:
       char.hp_debaff(500)
       char.bleeding = True
-      bot.send_message(message.from_user.id, 'Джагернаааааут!\n' + char.icon + '-500❤️🩸')
+      bot.send_message(message.from_user.id, MyStrings.Text.doc_leha_skill_text.value + char.icon + '-500❤️🩸')
 
-   elif boss.name == 'Мел' and boss.blazer_level >= 3:
+   elif boss.name == MyStrings.Text.mel_name.value and boss.blazer_level >= 3:
       boss.blazer_level = 0
       char.hp_debaff(500)
-      bot.send_message(message.from_user.id, 'Мел залил тебе блазуху в ухо!\n' + char.icon + '-500❤️')
+      bot.send_message(message.from_user.id, MyStrings.Text.mel_skill_text.value + char.icon + '-500❤️')
 
-   elif boss.name == 'Дрон':
+   elif boss.name == MyStrings.Text.dron_name.value:
       if chance(boss.obida_level) == True:
          char.hp_debaff(1000)
-         bot.send_message(message.from_user.id, '☠️Дрон затаил лютую обиду!☠️')
+         bot.send_message(message.from_user.id, MyStrings.Text.dron_skill_text.value)
 
-   elif boss.name == 'Валера Гладиатор':
+   elif boss.name == MyStrings.Text.glad_name.value:
       gadza_choice = random.randint(1, 6)
       if gadza_choice == 1:
          char.hp_debaff(500)
-         bot.send_message(message.from_user.id, 'Твин-турбо гадза на минус уши\n' + char.icon + '-500❤️')
+         bot.send_message(message.from_user.id, MyStrings.Text.glad_turbo_text.value + char.icon + '-500❤️')
       elif gadza_choice == 2:
          boss.hp_baff(500)
-         bot.send_message(message.from_user.id, 'Церковная целебная гадза\n' + boss.icon + '+500🖤')
+         bot.send_message(message.from_user.id, MyStrings.Text.glad_church_text.value + boss.icon + '+500🖤')
       elif gadza_choice == 3:
          boss.crit_baff(25)
-         bot.send_message(message.from_user.id, 'Кошачья критическая гадза\n' + boss.icon + '+25%💥')
+         bot.send_message(message.from_user.id, MyStrings.Text.glad_cat_text.value + boss.icon + '+25%💥')
       elif gadza_choice == 4:
          char.dmg_debaff(250)
-         bot.send_message(message.from_user.id, 'Эльфийская гадза с эффектом попускания\n' + char.icon + '-250⚔️')
+         bot.send_message(message.from_user.id, MyStrings.Text.glad_elf_text.value + char.icon + '-250⚔️')
       elif gadza_choice == 5:
          char.poison = True
-         bot.send_message(message.from_user.id, 'Ядовитая гадза по-киевски\n' + char.icon + '+🦠')
+         bot.send_message(message.from_user.id, MyStrings.Text.glad_poison_text.value + char.icon + '+🦠')
 
-   elif boss.name == 'Великая Шива':
+   elif boss.name == MyStrings.Text.shiva_name.value:
       if boss.crit < 100:
          boss.crit_baff(20)
-         bot.send_message(message.from_user.id, 'Криты завезли!\n' + boss.icon + '+20%💥')
+         bot.send_message(message.from_user.id, MyStrings.Text.shiva_crit_buff_text.value + boss.icon + '+20%💥')
       elif boss.crit == 100:
          boss.dmg_baff(boss.dmg * 2)
-         bot.send_message(message.from_user.id, 'Урон завезли!\n' + boss.icon + '+100%⚔️')
+         bot.send_message(message.from_user.id, MyStrings.Text.shiva_damage_buff_text.value + boss.icon + '+100%⚔️')
 
 def victory_check(message):
    #проверка на победу в раунде
@@ -891,17 +891,17 @@ def victory_check(message):
    if boss.hp > 0 and char.hp > 0:
       start_fight(message)
 
-   elif boss.hp <= 0 and char.hp > 0 and boss.name == 'Король Макар':
+   elif boss.hp <= 0 and char.hp > 0 and boss.name == MyStrings.Text.makar_name.value:
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-      keyboard.add('ДАВАЙ ЕЩЕ РАЗОК')
-      msg = bot.send_message(message.from_user.id, text = '🥳Похоже ты победил. Круто🥳', reply_markup=keyboard)
+      keyboard.add(MyStrings.Text.restart_button_text.value)
+      msg = bot.send_message(message.from_user.id, text = MyStrings.Text.victory_game_text.value, reply_markup=keyboard)
       bot.register_next_step_handler(msg, get_character)
 
-   elif boss.hp <= 0 and char.hp > 0 and boss.name != 'Король Макар':
+   elif boss.hp <= 0 and char.hp > 0 and boss.name != MyStrings.Text.makar_name.value:
       next_fight(message)
 
    elif char.hp <= 0: 
-      bot.send_message(message.from_user.id, '👻Увы, но ты проебал, старина👻\nНапиши мне что-нибудь и начнем сначала')
+      bot.send_message(message.from_user.id, MyStrings.Text.game_over_text.value)
 
 def next_fight(message):
    #конец боя после победы
@@ -914,19 +914,19 @@ def next_fight(message):
    parameters.poison_dmg = 5
    char.busted_level = 0
 
-   if parameters.win_rate < 8 and boss.name == 'Саша Шлякин':
+   if parameters.win_rate < 8 and boss.name == MyStrings.Text.sanya_name.value:
       char.hp += char.hp * 20 // 100
       char.dmg += char.dmg * 20 // 100
       char.crit_baff(5)
-      bot.send_message(message.from_user.id, 'Победа над собой возвысила тебя!\n+20%❤️\n+20%⚔️\n+5%💥')
+      bot.send_message(message.from_user.id, MyStrings.Text.sanya_sasha_text.value)
 
-   elif parameters.win_rate < 8 and char.name == 'Тошик':
+   elif parameters.win_rate < 8 and char.name == MyStrings.Text.toshik_name.value:
       char.dmg += char.hp * 5 // 100
-      bot.send_message(message.from_user.id, 'Твое здоровье - твоя сила\n⚔️+5%❤️')
+      bot.send_message(message.from_user.id, MyStrings.Text.toshik_passive_text.value)
 
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-   keyboard.add('Я молодец')
-   msg = bot.send_message(message.from_user.id, text = 'Ты победил, слабина', reply_markup=keyboard)
+   keyboard.add(MyStrings.Text.victory_button_text.value)
+   msg = bot.send_message(message.from_user.id, text = MyStrings.Text.victory_fight_text.value, reply_markup=keyboard)
    bot.register_next_step_handler(msg, shop_choice)
 
 bot.polling(none_stop=True, interval=0)
