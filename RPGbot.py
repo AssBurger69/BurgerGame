@@ -88,24 +88,11 @@ def get_character(message):
 
 def char_description(message):
    # описание персонажей, назначение их характеристик и кнопка подтверждения
-   global char
-   
-   if message.text == MyStrings.Text.mitya_name.value:
-      char = Characters.Char(MyStrings.Text.mitya_name.value, 800, 100, 0, 0, 20, MyStrings.Text.mitya_description_text.value, MyStrings.Text.mitya_skill_button_text.value, MyStrings.Text.mitya_icon.value)
-      
-   elif message.text == MyStrings.Text.sanya_name.value:
-      char = Characters.Char(MyStrings.Text.sanya_name.value, 1000, 200, 30, 0, 0, MyStrings.Text.sanya_description_text.value, MyStrings.Text.sanya_skill_button_text.value, MyStrings.Text.sanya_icon.value)
-      
-   elif message.text == MyStrings.Text.toshik_name.value:
-      char = Characters.Char(MyStrings.Text.toshik_name.value, 1500, 100, 0, 0, 0, MyStrings.Text.temich_description_text.value, MyStrings.Text.toshik_skill_button_text.value, MyStrings.Text.toshik_icon.value)
-      
-   elif message.text == MyStrings.Text.kolya_name.value:
-      char = Characters.Char(MyStrings.Text.kolya_name.value, 1200, 100, 0, 0, 0, MyStrings.Text.kolya_description_text.value, MyStrings.Text.kolya_skill_button_text.value, MyStrings.Text.kolya_icon.value)
-      
-   elif message.text == MyStrings.Text.temich_name.value:
-      char = Characters.Char(MyStrings.Text.temich_name.value, 800, 150, 0, 15, 0, MyStrings.Text.temich_description_text.value, MyStrings.Text.temich_skill_button_text.value, MyStrings.Text.temich_icon.value)
 
-   bot.send_message(message.from_user.id, char.name + char.icon + '\n' + char.description)
+   Characters.Char_get_stats(message.text)
+
+   bot.send_message(message.from_user.id, Characters.Message_text.char_stats_message())
+
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
    keyboard.add(MyStrings.Text.ready_key_text.value, MyStrings.Text.another_char_key_text.value)
    msg = bot.send_message(message.from_user.id, text = MyStrings.Text.char_choice_question.value, reply_markup=keyboard)

@@ -1,3 +1,4 @@
+import MyStrings
 class Pers():
    def __init__(self, name, hp, dmg, crit, miss, vamp):
       self.name = name
@@ -60,3 +61,27 @@ class BossList():
       self.list_medium = ['Инквизиция', 'Доктор Леха', 'Пьяный Леха', 'Мел', 'Рыжий', 'Следователь']
       self.list_hard = ['Донер Кебаб', 'Черный Стас', 'Дрон', 'Валера Гладиатор', 'Великая Шива']
       self.aboba = aboba
+
+
+
+def Char_get_stats(x):
+   global char
+
+   if x == MyStrings.Text.mitya_name.value:
+      char = Char(MyStrings.Text.mitya_name.value, 800, 100, 0, 0, 20, MyStrings.Text.mitya_description_text.value, MyStrings.Text.mitya_skill_button_text.value, MyStrings.Text.mitya_icon.value)
+      
+   elif x == MyStrings.Text.sanya_name.value:
+      char = Char(MyStrings.Text.sanya_name.value, 1000, 200, 30, 0, 0, MyStrings.Text.sanya_description_text.value, MyStrings.Text.sanya_skill_button_text.value, MyStrings.Text.sanya_icon.value)
+      
+   elif x == MyStrings.Text.toshik_name.value:
+      char = Char(MyStrings.Text.toshik_name.value, 1500, 100, 0, 0, 0, MyStrings.Text.temich_description_text.value, MyStrings.Text.toshik_skill_button_text.value, MyStrings.Text.toshik_icon.value)
+      
+   elif x == MyStrings.Text.kolya_name.value:
+      char = Char(MyStrings.Text.kolya_name.value, 1200, 100, 0, 0, 0, MyStrings.Text.kolya_description_text.value, MyStrings.Text.kolya_skill_button_text.value, MyStrings.Text.kolya_icon.value)
+      
+   elif x == MyStrings.Text.temich_name.value:
+      char = Char(MyStrings.Text.temich_name.value, 800, 150, 0, 15, 0, MyStrings.Text.temich_description_text.value, MyStrings.Text.temich_skill_button_text.value, MyStrings.Text.temich_icon.value)
+
+class Message_text():
+   def char_stats_message():
+      return char.name + char.icon + '\n' + char.description
