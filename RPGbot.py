@@ -6,24 +6,14 @@ import random
 import Characters
 import Drop
 import Locations
-import Parameters
 import MyStrings
+import BotMessages
 bot = TeleBot('2102427745:AAECFy-T6GfMWH1VNshsucAEXZEfzmGUZBk')
 
 def chance(x):
    #генератор вероятности
    chance = random.randint(1, 100) in range(1, x)
    return chance
-
-def game_parameters():
-   #назначение базовых классов
-   global loot
-   global bosses
-   global parameters
-
-   parameters = Parameters.BaseParameters(10, 0, False)
-   loot = Drop.Loot(MyStrings.Text.empty_text.value)
-   bosses = Characters.BossList(MyStrings.Text.empty_text.value)
 
 def stas_passive(x):
    #чек на возвращение урона Черного Стаса
@@ -75,23 +65,21 @@ def regeneration(message):
 @bot.message_handler(content_types=['text'])
 
 def get_character(message):
-   # начальное сообщение и кнопки выбора персонажей
-   
+   # приветственное сообщение
    bot.send_message(message.from_user.id, MyStrings.Text.hello_text.value)
    
-   game_parameters()
-
+   # клавиатура с кнопками и переходом на следующий шаг
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
    keyboard.add(MyStrings.Text.mitya_name.value, MyStrings.Text.sanya_name.value, MyStrings.Text.toshik_name.value, MyStrings.Text.kolya_name.value, MyStrings.Text.temich_name.value)
    msg = bot.send_message(message.from_user.id, text = MyStrings.Text.char_choice_text.value, reply_markup=keyboard)
-   bot.register_next_step_handler(msg, char_description)
+   bot.register_next_step_handler(msg, char_creation)
 
-def char_description(message):
-   # описание персонажей, назначение их характеристик и кнопка подтверждения
+def char_creation(message):
+   # Создание персонажа
+   Characters.char_get_stats(message.text)
 
-   Characters.Char_get_stats(message.text)
-
-   bot.send_message(message.from_user.id, Characters.Message_text.char_stats_message())
+   # Сообщение с характеристиками персонажа
+   bot.send_message(message.from_user.id, BotMessages.Message_text.char_description_message())
 
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
    keyboard.add(MyStrings.Text.ready_key_text.value, MyStrings.Text.another_char_key_text.value)
@@ -101,40 +89,35 @@ def char_description(message):
 def shop_choice(message):
    # выбор магазина
    if message.text == MyStrings.Text.another_char_key_text.value:
-      bot.send_message(message.from_user.id, 'Напиши мне что-нибудь, потом это подправлю')
+      bot.send_message(message.from_user.id, MyStrings.Text.give_answer_text.value)
       bot.register_next_step_handler(message, get_character)
    elif message.text == MyStrings.Text.ready_key_text.value or MyStrings.Text.victory_button_text.value:
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-      keyboard.add(MyStrings.Text.stas_shop_name.value, MyStrings.Text.bratishkino_shop_name.value)
+      keyboard.add(MyStrings.Text.stas_shop_name.value, MyStrings.Text.bratishki_shop_name.value)
       msg = bot.send_message(message.from_user.id, text = MyStrings.Text.shop_choice_text.value, reply_markup=keyboard)
       bot.register_next_step_handler(msg, shop)
 
 def shop(message):
-   #создание списка из трех рандомных итемов/баффов, которые потом будут кнопками
-   buff_choice = [random.choice(loot.buff_list), random.choice(loot.buff_list), random.choice(loot.buff_list)]
-   item_choice = [random.choice(loot.item_list), random.choice(loot.item_list), random.choice(loot.item_list)]
-   
-   #развилка магазинов с применением их свойств на персонажа и кнопками выбора
+   #применение свойства магазина на персонажа
+   Drop.shop_enter(message.text)
+
    if message.text == MyStrings.Text.stas_shop_name.value:
-      char.dmg_baff(50)
       bot.send_message(message.from_user.id, MyStrings.Text.stas_shop_description.value)
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-      keyboard.add(item_choice[0], item_choice[1], item_choice[2])
+      keyboard.add(Drop.item_choice[0], Drop.item_choice[1], Drop.item_choice[2])
       msg = bot.send_message(message.from_user.id, text = MyStrings.Text.item_choice_text.value, reply_markup=keyboard)
       bot.register_next_step_handler(msg, items_upgrade)
 
-   elif message.text == MyStrings.Text.bratishkino_shop_name.value:
-      char.hp_baff(200)
-      bot.send_message(message.from_user.id, MyStrings.Text.bratishkino_shop_description.value)
+   elif message.text == MyStrings.Text.bratishki_shop_name.value:
+      bot.send_message(message.from_user.id, MyStrings.Text.bratishki_shop_description.value)
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-      keyboard.add(buff_choice[0], buff_choice[1], buff_choice[2])
+      keyboard.add(Drop.buff_choice[0], Drop.buff_choice[1], Drop.buff_choice[2])
       msg = bot.send_message(message.from_user.id, text = MyStrings.Text.item_choice_text.value, reply_markup=keyboard)
       bot.register_next_step_handler(msg, stats_upgrade)
 
 def items_upgrade(message):
    #обновление предмета персонажа если он пошел к Стасу
-   char.item = message.text
-   loot.item_list.remove(message.text)
+   Drop.stas_enter(message.text)
    
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
    keyboard.add(MyStrings.Text.boss_choice_question.value)
@@ -142,196 +125,35 @@ def items_upgrade(message):
    bot.register_next_step_handler(msg, boss_choice)
 
 def stats_upgrade(message):
-   #обновление статов персонажа от выбранного предмета если он пошел к Братишкам
-   x = message.text
-   loot.buff_list.remove(x)
-   
-   if x == MyStrings.Text.sochnik_name.value:
-      buff = Drop.Buff(25, MyStrings.Text.sochnik_description.value)
-      char.hp += char.hp * buff.value_1 // 100
-   
-   elif x == MyStrings.Text.dubai_name.value:
-      buff = Drop.Buff(30, MyStrings.Text.dubai_description.value)
-      char.hp += char.hp * buff.value_1 // 100
-
-   elif x == MyStrings.Text.dron_meat_name.value:
-      buff = Drop.Buff(40, MyStrings.Text.dron_meat_description.value)
-      char.hp += char.hp * buff.value_1 // 100
-
-   elif x == MyStrings.Text.pizza5_name.value:
-      buff = Drop.Buff(50, MyStrings.Text.pizza5_description.value)
-      char.hp += char.hp * buff.value_1 // 100
-
-   elif x == MyStrings.Text.guitar_name.value:
-      buff = Drop.Buff(15, MyStrings.Text.guitar__description.value)
-      char.dmg += char.dmg * buff.value_1 // 100
-
-   elif x == MyStrings.Text.bashkerme_name.value:
-      buff = Drop.Buff(25, MyStrings.Text.bashkerme_description.value)
-      char.dmg += char.dmg * buff.value_1 // 100
-
-   elif x == MyStrings.Text.pika_name.value:
-      buff = Drop.Buff(30, MyStrings.Text.pika_description.value)
-      char.dmg += char.dmg * buff.value_1 // 100
-
-   elif x == MyStrings.Text.dildo_name.value:
-      buff = Drop.Buff(50, MyStrings.Text.dildo_description.value)
-      char.dmg += char.dmg * buff.value_1 // 100
-   
-   elif x == MyStrings.Text.everlast_name.value:
-      buff = Drop.SuperBuff(10, 10, MyStrings.Text.everlast_description.value)
-      char.hp += char.hp * buff.value_1 // 100
-      char.dmg += char.dmg * buff.value_2 // 100
-
-   elif x == MyStrings.Text.marki_name.value:
-      buff = Drop.SuperBuff(20, 20, MyStrings.Text.marki_description.value)
-      char.hp += char.hp * buff.value_1 // 100
-      char.dmg += char.dmg * buff.value_2 // 100
-
-   elif x == MyStrings.Text.limon_name.value:
-      buff = Drop.UltraBuff(30, 50, 5, MyStrings.Text.limon_description.value)
-      char.hp -= char.hp * buff.value_1 // 100
-      char.dmg += char.dmg * buff.value_2 // 100
-      char.crit += buff.value_3
-
-   elif x == MyStrings.Text.chess_name.value:
-      buff = Drop.Buff(5, MyStrings.Text.chess_description.value)
-      char.crit += buff.value_1
-   
-   elif x == MyStrings.Text.vargan_name.value:
-      buff = Drop.Buff(10, MyStrings.Text.vargan_description.value)
-      char.crit += buff.value_1
-
-   elif x == MyStrings.Text.choops_name.value:
-      buff = Drop.Buff(10, MyStrings.Text.choops_description.value)
-      char.vamp += buff.value_1
-
-   elif x == MyStrings.Text.shiva_bless_name.value:
-      buff = Drop.SuperBuff(50, 15, MyStrings.Text.shiva_bless_description.value)
-      char.dmg += char.dmg * buff.value_1 // 100
-      char.crit += buff.value_2
-
-   elif x == MyStrings.Text.makar_bless_name.value:
-      buff = Drop.UltraBuff(30, 30, 10, MyStrings.Text.makar_bless_description.value)
-      char.hp += char.hp * buff.value_1 // 100
-      char.dmg += char.dmg * buff.value_2 // 100
-      char.crit += buff.value_3
-
-   if x not in char.all_items:
-      char.all_items.append(x)
-   
-   bot.send_message(message.from_user.id, buff.dscr)
+   # обновление статов персонажа от выбранного предмета если он пошел к Братишкам
+   Drop.bratishki_enter(message.text)
+   # сообщение с описанием предмета
+   bot.send_message(message.from_user.id, Drop.buff.description)
 
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
    keyboard.add(MyStrings.Text.boss_choice_question.value)
-   msg = bot.send_message(message.from_user.id, text = char.icon + char.name + ':\n❤️ ' + str(char.hp) + '\n⚔️ ' + str(char.dmg) + '\n💥 ' + str(char.crit), reply_markup=keyboard)
+   msg = bot.send_message(message.from_user.id, text = BotMessages.Message_text.char_stats_message(), reply_markup=keyboard)
    bot.register_next_step_handler(msg, boss_choice)
-
-def boss_stats(x):
-   #назначение босса и его уникальных свойств
-   global boss
-
-   if x == MyStrings.Text.palich_name.value:
-      boss = Characters.Boss(x, 800, 200, 0, 0, 0, MyStrings.Text.palich_description.value)
-      
-   elif x == MyStrings.Text.chaikovskii_name.value:
-      boss = Characters.Boss(x, 600, 250, 0, 0, 0, MyStrings.Text.chaikovskii_description.value)
-      boss.resurrection = True
-
-   elif x == MyStrings.Text.viv_name.value:
-      boss = Characters.Boss(x, 900, 100, 0, 0, 0, MyStrings.Text.viv_description.value)
-
-   elif x == MyStrings.Text.sasha_name.value:
-      boss = Characters.Boss(x, 1000, 200, 20, 0, 0, MyStrings.Text.sasha_description.value)
-
-   elif x == MyStrings.Text.tvar_name.value:
-      boss = Characters.Boss(x, 800, 50, 0, 0, 0, MyStrings.Text.tvar_description.value)
-      boss.returnal_value = 50
-
-   elif x == MyStrings.Text.randomich_name.value:
-      boss = Characters.Boss(x, random.randint(100, 1001), random.randint(10, 301), random.randint(0, 51), random.randint(0, 51), 0, MyStrings.Text.randomich_description.value)
-      boss.returnal_value = random.randint(0, 51)
-      boss.regen = random.randint(0, 301)
-
-   elif x == MyStrings.Text.kitty_name.value:
-      boss = Characters.Boss(x, 1000, 200, 0, 0, 0, MyStrings.Text.kitty_description.value)
-      boss.endskill_value = 50
-
-   elif x == MyStrings.Text.inkvisizia_name.value:
-      boss = Characters.Boss(x, 500, 500, 50, 0, 0, MyStrings.Text.inkvisizia_description.value)
-
-   elif x == MyStrings.Text.doc_leha_name.value:
-      boss = Characters.Boss(x, 1500, 300, 0, 0, 0, MyStrings.Text.doc_leha_description.value)
-      boss.endskill_value = 36
-
-   elif x == MyStrings.Text.drunk_leha_name.value:
-      boss = Characters.Boss(x, 1200, 100, 0, 0, 0, MyStrings.Text.doc_leha_description.value)
-
-   elif x == MyStrings.Text.mel_name.value:
-      boss = Characters.Boss(x, 50, 0, 0, 90, 0, MyStrings.Text.mel_description.value)
-
-   elif x == MyStrings.Text.redhead_name.value:
-      boss = Characters.Boss(x, 2000, 100, 0, 0, 0, MyStrings.Text.redhead_description.value)
-      boss.regen = 300
-
-   elif x == MyStrings.Text.sledovatel_name.value:
-      boss = Characters.Boss(x, 1500, 100, 0, 50, 0, MyStrings.Text.redhead_description.value)
-      boss.busted_level = 10
-
-   elif x == MyStrings.Text.doner_name.value:
-      boss = Characters.Boss(x, 1800, 350, 0, 0, 0, MyStrings.Text.doner_description.value)
-
-   elif x == MyStrings.Text.black_stas_name.value:
-      boss = Characters.Boss(x, 1500, 300, 0, 0, 0, MyStrings.Text.black_stas_description.value)
-
-   elif x == MyStrings.Text.dron_name.value:
-      boss = Characters.Boss(x, 2000, 100, 0, 0, 0, MyStrings.Text.dron_description.value)
-      boss.obida_level = 5
-
-   elif x == MyStrings.Text.glad_name.value:
-      boss = Characters.Boss(x, 3000, 200, 0, 0, 0, MyStrings.Text.glad_description.value)
-
-   elif x == MyStrings.Text.shiva_name.value:
-      boss = Characters.Boss(x, 2000, 500, 0, 30, 0, MyStrings.Text.shiva_description.value)
-
-   elif x == MyStrings.Text.makar_name.value:
-      boss = Characters.Boss(x, char.hp, char.dmg, char.crit, char.miss, char.vamp, MyStrings.Text.makar_description.value)
-
-   elif x == MyStrings.Text.gomozeki_name.value:
-      boss = Characters.Boss(x, 2000, 300, 20, 0, 0, MyStrings.Text.gomozeki_description.value)
-      boss.regen = 200
 
 def boss_choice(message):
    #выбор уровня сложности босса в зависимости от побед
+   Characters.boss_difficult_choice(Characters.Char.win_rate)
 
-   if parameters.win_rate < 3:
-      boss_list = bosses.list_easy
-   elif parameters.win_rate < 6 and parameters.win_rate >= 3:
-      boss_list = bosses.list_medium
-   elif parameters.win_rate < 9 and parameters.win_rate >= 6:
-      boss_list = bosses.list_hard
-   elif parameters.win_rate == 9:
-      boss_list = [MyStrings.Text.makar_name.value]
-
-   #выбор босса, удаление его из пула боссов и применение его статов
-   boss_name = random.choice(boss_list)
-   boss_list.remove(boss_name)
-   boss_stats(boss_name)
+   Characters.boss_get_stats(Characters.boss_name)
 
    #проверка в розыске ли персонаж
-   if parameters.wanted_level == True:
-      boss.resurrection = True
+   if Characters.Char.wanted_level == True:
+      Characters.Boss.resurrection = True
       bot.send_message(message.from_user.id, MyStrings.Text.boss_police_upgrade_text.value)
 
    #проверка на является ли персонаж Сашей Шлякиным при битве с Сашей Шлякиным
-   if boss.name == MyStrings.Text.sasha_name.value and char.name != MyStrings.Text.sanya_name.value:
-      bot.send_message(message.from_user.id, boss.name + '\n🖤 ' + str(boss.hp) + '\n⚔️ ' + str(boss.dmg) + '\n💥 ' + str(boss.crit))
+   if Characters.boss.name == MyStrings.Text.sasha_name.value and Characters.char.name != MyStrings.Text.sanya_name.value:
       bot.send_message(message.from_user.id, MyStrings.Text.sasha_bye_text.value)
       boss_choice(message)
    else:
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
       keyboard.add(MyStrings.Text.location_choice_question.value)
-      msg = bot.send_message(message.from_user.id, text = boss.name + '\n🖤 ' + str(boss.hp) + '\n⚔️ ' + str(boss.dmg) + '\n💥 ' + str(boss.crit) + '\n' + boss.dscr, reply_markup=keyboard)
+      msg = bot.send_message(message.from_user.id, text = BotMessages.Message_text.boss_stats_message(), reply_markup=keyboard)
       bot.register_next_step_handler(msg, location)
 
 def location_choice(x):
