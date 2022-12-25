@@ -157,12 +157,22 @@ def item_usage(x):
 
    elif x == MyStrings.Text.travmat_name.value:
       item = Item(300, MyStrings.Text.travmat_description.value)
-      Characters.boss.health_down(item.value)
-      Characters.boss.bleeding = True
+      if Characters.boss.name == MyStrings.Text.viv_name.value:
+         Characters.char.health_down(item.value)
+         Characters.char.bleeding = True
+         item.boss_iteraction_message = MyStrings.Text.viv_travmat_text.value
+      else:
+         Characters.boss.health_down(item.value)
+         Characters.boss.bleeding = True
 
    elif x == MyStrings.Text.cola_name.value:
       item = Item(500, MyStrings.Text.cola_description.value)
-      Characters.boss.health_down(item.value)
+      if Characters.boss.name == MyStrings.Text.doner_name.value:
+         Characters.char.health_down(item.value)
+         Characters.boss.health_down(item.value)
+         item.boss_iteraction_message = MyStrings.Text.doner_cola_text.value
+      else:
+         Characters.boss.health_down(item.value)
 
    elif x == MyStrings.Text.sick_sock_name.value:
       item = Item(100, MyStrings.Text.sick_sock_description.value)

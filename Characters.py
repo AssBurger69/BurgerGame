@@ -212,57 +212,45 @@ def boss_difficult_choice(x):
       boss_name = [MyStrings.Text.makar_name.value]
 
 def boss_prelude_skill_activation(x):
+   global prelude_skill_message
+   
+   prelude_skill_message = False
+
    if x == MyStrings.Text.palich_name.value:
       char.silence = True
       prelude_skill_message = MyStrings.Text.palich_prelude_text.value
 
-   elif x == MyStrings.Text.viv_name.viv_name and char.item == MyStrings.Text.travmat_name.value:
-      char.health_down
-      char.hp_debaff(300)
-      char.bleeding = True
-      char.item = MyStrings.Text.empty_text.value
-      bot.send_message(message.from_user.id, 'Володя забрал свой травмат!\n' + char.icon + '-300❤️🩸')
-      start_fight(message)
-
    elif boss.name == MyStrings.Text.redhead_name.value:
       char.poison = True
-      bot.send_message(message.from_user.id, char.icon + ' + 🦠')
-      start_fight(message)
+      prelude_skill_message = MyStrings.Text.redhead_prelude_text.value
 
    elif boss.name == MyStrings.Text.sledovatel_name.value:
-      drugs = 'Шига', 'Мадам', MyStrings.Text.marki_name.value
+      drugs = MyStrings.Text.marki_name.value, MyStrings.Text.madam_name.value, MyStrings.Text.marki_name.value
       cross_check = [x for x in drugs if x in char.all_items]
-      if char.dmg > 500:
-         char.dmg //= 2
-         bot.send_message(message.from_user.id, '👮‍♂️: Чет многовато у вас дамага, молодой человек\n' + char.icon + '-50%⚔️')
-      if char.elex_count > 0 or len(cross_check) > 0:
+      if char.damage > 500:
+         char.health_down_procent(50)
+         prelude_skill_message = MyStrings.Text.sledovatel_damage_prelude_text.value
+      elif char.elex_count > 0 or len(cross_check) > 0:
          char.busted_level += 50
-         bot.send_message(message.from_user.id, MyStrings.Text.sledovatel_drugcheck_text.value)
-      start_fight(message)
+         prelude_skill_message = MyStrings.Text.sledovatel_drugcheck_text.value
+      elif char.damage > 500 and char.elex_count > 0 or len(cross_check) > 0:
+         char.health_down_procent(50)
+         char.busted_level += 50
+         prelude_skill_message = MyStrings.Text.sledovatel_damage_prelude_text.value + '\n' + MyStrings.Text.sledovatel_drugcheck_text.value
 
    elif boss.name == MyStrings.Text.dron_name.value:
       obida_level = 0
       obida_level += len(char.all_items) * 5
-      bot.send_message(message.from_user.id, MyStrings.Text.dron_bratishki_text.value)
+      prelude_skill_message = MyStrings.Text.dron_bratishki_text.value
       if MyStrings.Text.dron_meat_name.value in char.all_items:
          obida_level += 10
-         bot.send_message(message.from_user.id, MyStrings.Text.dron_dron_meat_text.value)
-      start_fight(message)
+         prelude_skill_message += '\n' + MyStrings.Text.dron_dron_meat_text.value
 
-   elif boss.name == MyStrings.Text.doner_name.value:
-      if MyStrings.Text.everlast_name.value in char.all_items:
-         boss.hp += boss.hp * 10 // 100
-         boss.dmg += boss.dmg * 10 // 100
-         bot.send_message(message.from_user.id, MyStrings.Text.doner_everlast_text.value)
-      elif '2.5-литровка Колы' == char.item:
-         char.hp_debaff(500)
-         boss.hp_debaff(500)
-         bot.send_message(message.from_user.id, MyStrings.Text.doner_cola_text)
-      start_fight(message)
+   elif boss.name == MyStrings.Text.doner_name.value and MyStrings.Text.everlast_name.value in char.all_items:
+      boss.health_up_procent(10)
+      boss.damage_up_procent(10)
+      prelude_skill_message = MyStrings.Text.doner_everlast_text.value
 
    elif boss.name == MyStrings.Text.black_stas_name.value and char.name == MyStrings.Text.mitya_name.value:
-      boss.dmg += char.elex_count * 200
-      bot.send_message(message.from_user.id, MyStrings.Text.black_stas_mitya_text.value)
-      start_fight(message)
-
-   else: start_fight(message)
+      boss.damage_up(char.elex_count * 200)
+      prelude_skill_message = MyStrings.Text.black_stas_mitya_text.value
