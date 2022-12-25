@@ -8,7 +8,8 @@ import Drop
 import Locations
 import MyStrings
 import BotMessages
-bot = TeleBot('токен бота')
+import Fight
+bot = TeleBot('')
 
 def bleeding(message):
    #кровотечение
@@ -181,7 +182,7 @@ def action_choice(message):
    #применение выбранного игроком действия
 
    if message.text == MyStrings.Text.attack_button_text.value:
-      attack_turn(message)
+      Fight.attack()
 
    elif message.text == char.skill_name:
       if char.cooldown <= 0 and char.silence == False and char.stan_timer <= 0:
@@ -251,56 +252,6 @@ def skill(x):
 def item_using(x):
    #использование предмета персонажа
    x = False
-
-def char_attack(message):
-   #атака персонажа
-   global char_attack_damage
-
-   if chance(char.crit) == True:
-      char_attack_damage = char.dmg * 2
-      boss.hp_debaff(char_attack_damage)
-      bot.send_message(message.from_user.id, '💥Критический урон!💥\n' + '👿-' + str(char.dmg * 2) + '🖤')
-
-   else:
-      char_attack_damage = char.dmg
-      boss.hp_debaff(char_attack_damage)
-      bot.send_message(message.from_user.id, '👿-' + str(char.dmg) + '🖤')
-
-def boss_returnal(message):
-   #проверка на обратку босса
-   if boss.returnal_value > 0:
-      returnal_damage = char_attack_damage * boss.returnal_value // 100
-      char.hp_debaff(returnal_damage)
-      b_r_indent = ' ' * 10 + str(boss.returnal_value) + '%\n'
-      bot.send_message(message.from_user.id, '🤕Обратка🤕\n' + b_r_indent + char.icon + '-' + str(returnal_damage) + '❤️')
-
-def boss_attack(message):
-   #атака босса
-   if char.name == MyStrings.Text.mitya_name.value and boss.name == MyStrings.Text.inkvisizia_name.value:
-      char.hp += char.hp * 50 // 100
-      bot.send_message(message.from_user.id, MyStrings.Text.mitya_inkvisizia_text.value)
-   
-   else:
-      if chance(char.miss) == True:
-         c_m_indent = ' ' * 9 + str(char.miss) + '%'
-         bot.send_message(message.from_user.id, char.name + ' скользкий тип\n')
-         bot.send_message(message.from_user.id, '🛡Уворотка🛡\n' + c_m_indent)
-
-      elif chance(boss.crit) == True:
-         char.hp_debaff(boss.dmg * 2)
-         bot.send_message(message.from_user.id, '💥Критический урон!💥\n' + char.icon + '-' + str(boss.dmg * 2) + '❤️')
-
-      elif chance(boss.crit) == False:
-         char.hp_debaff(boss.dmg)
-         bot.send_message(message.from_user.id, char.icon + '-' + str(boss.dmg) + '❤️')
-
-def vampire(message):
-   #проверка на вампиризм
-   if char.vamp > 0:
-      vampire_value = char_attack_damage * char.vamp // 100
-      char.hp_baff(vampire_value)
-      v_indent = ' ' * 11 + str(char.vamp) + '%\n'
-      bot.send_message(message.from_user.id, '🦇Вампирик🦇\n' + v_indent + char.icon + '+' + str(vampire_value) + '❤️')
 
 def boss_endskill(message):  
    #применение скилла босса в конце раунда

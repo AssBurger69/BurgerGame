@@ -98,7 +98,7 @@ class Boss(Pers):
    resurrection = False
    bleeding = False
    poison = False
-   icon = '👿'
+   icon = MyStrings.Text.boss_icon.value
    
    def __init__(self, name, health, damage, critical_chance, miss_chance, lifesteal,regeneration ,description):
       super().__init__(name, health, damage, critical_chance, miss_chance, lifesteal, regeneration, description)

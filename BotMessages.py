@@ -3,6 +3,7 @@ import Characters
 import MyStrings
 import Locations
 import Drop
+import Fight
 
 class Message_text():
    def char_description_message():
@@ -37,11 +38,31 @@ class Message_text():
       indent2 = ' ' * (8 + z)
       return '{0}\n{1}{2}{3}\n{4}{5}{6}'.format(str1, str2, indent1, str3, str4, indent2, str5)
 
-   def miss_text_indent(x):
-      return ' ' * 9 + str(x) + '%'
+   def miss_message(x):
+      return '{0}{1}{2}%'.format(MyStrings.Text.miss_text.value, ' ' * 9, str(x))
 
    def black_stas_returnal_message():
       return '{0}\n{1}{2}{3}{4}'.format(MyStrings.Text.black_stas_returnal_text.value, Characters.char.icon, MyStrings.Text.minus.value, str(Characters.char.damage), MyStrings.Text.char_health_icon.value)
 
    def stan_effect_message(x):
       return '{0} {1}\n{2}'.format(x, MyStrings.Text.stan_text.value, MyStrings.Text.stan_icon.value)
+
+   def char_critical_attack_message():
+      return '{0}{1}{0}\n{2}{3}{4}'.format(MyStrings.Text.critical_chance_icon.value, MyStrings.Text.critical_text, Characters.boss.icon, MyStrings.Text.minus.value, Fight.char_attack_damage, MyStrings.Text.boss_health_icon.value)
+
+   def char_attack_message():
+      return '{0}{1}{2}{3}'.format(Characters.boss.icon, MyStrings.Text.minus.value, Fight.char_attack_damage, MyStrings.Text.boss_health_icon.value)
+
+   def lifesteal_message():
+      indent = ' ' * 11 + str(Characters.char.lifesteal) + '%\n'
+      return '{0}{1}{0}\n{2}{3}{4}{5}{6}'.format(MyStrings.Text.lifesteal_icon.value, MyStrings.Text.lifesteal_text.value, indent, Characters.char.icon, MyStrings.Text.plus.value, Fight.char_attack_damage * Characters.char.lifesteal // 100, MyStrings.Text.char_health_icon.value)
+
+   def returnal_message():   
+      indent = ' ' * 10 + str(Characters.boss.returnal_value) + '%\n'
+      return '{0}{1}{0}\n{2}{3}{4}{5}{6}'.format(MyStrings.Text.returnal_icon.value, MyStrings.Text.returnal_text.value, indent, Characters.char.icon, MyStrings.Text.minus.value, Fight.char_attack_damage * Characters.boss.returnal_value // 100, MyStrings.Text.char_health_icon.value)
+
+   def boss_critical_attack_message():
+      return '{0}{1}{0}\n{2}{3}{4}'.format(MyStrings.Text.critical_chance_icon.value, MyStrings.Text.critical_text, Characters.char.icon, MyStrings.Text.minus.value, Fight.boss_attack_damage, MyStrings.Text.char_health_icon.value)
+
+   def boss_attack_message():
+      return '{0}{1}{2}{3}'.format(Characters.char.icon, MyStrings.Text.minus.value, Fight.boss_attack_damage, MyStrings.Text.char_health_icon.value)
