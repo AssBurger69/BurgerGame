@@ -5,6 +5,7 @@ class Pers():
    poison_dmg = 10
    win_rate = 0
    wanted_level = False
+   ressurection_value = 800
 
    def __init__(self, name, health, damage, critical_chance, miss_chance, lifesteal, regeneration, description):
       self.name = name
@@ -88,13 +89,25 @@ class Char(Pers):
       self.icon = icon
 
 class Boss(Pers):
-   endskill_value = 0
+   end_skill_chance = 0
    returnal_value = 0
    regen = 0
    stan_timer = 0
-   blazer_level = 0
+   mel_blazer_level = 0
    busted_level = 0
-   obida_level = 0
+   dron_obida_level = 0
+   viv_damage_up_skill_value = 100
+   kity_end_skill_damage = 200
+   drunk_leha_boost_skill_value = 50
+   doc_leha_end_skill_damage = 500
+   mel_end_skill_damage = 500
+   dron_end_skill_damage = 2000
+   glad_end_skill_damage = 500
+   glad_health_up_skill_value = 500
+   glad_critical_up_skill_value = 25
+   glad_damage_down_skill_value = 250
+   shiva_critical_up_skill_value = 20
+   shiva_damage_up_skill_value = 100
    resurrection = False
    bleeding = False
    poison = False
@@ -152,14 +165,14 @@ def boss_get_stats(x):
 
    elif x == MyStrings.Text.kitty_name.value:
       boss = Boss(x, 1000, 200, 0, 0, 0, 0, MyStrings.Text.kitty_description.value)
-      boss.endskill_value = 50
+      boss.end_skill_chance = 50
 
    elif x == MyStrings.Text.inkvisizia_name.value:
       boss = Boss(x, 500, 500, 50, 0, 0, 0, MyStrings.Text.inkvisizia_description.value)
 
    elif x == MyStrings.Text.doc_leha_name.value:
       boss = Boss(x, 1500, 300, 0, 0, 0, 0, MyStrings.Text.doc_leha_description.value)
-      boss.endskill_value = 36
+      boss.end_skill_chance = 36
 
    elif x == MyStrings.Text.drunk_leha_name.value:
       boss = Boss(x, 1200, 100, 0, 0, 0, 0, MyStrings.Text.doc_leha_description.value)
@@ -182,7 +195,7 @@ def boss_get_stats(x):
 
    elif x == MyStrings.Text.dron_name.value:
       boss = Boss(x, 2000, 100, 0, 0, 0, 0, MyStrings.Text.dron_description.value)
-      boss.obida_level = 5
+      boss.dron_obida_level = 5
 
    elif x == MyStrings.Text.glad_name.value:
       boss = Boss(x, 3000, 200, 0, 0, 0, 0, MyStrings.Text.glad_description.value)

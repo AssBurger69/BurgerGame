@@ -20,6 +20,8 @@ def attack():
    returnal_message = False
    mitya_inkvisizia_message = False
    boss_attack_message = False
+   boss_ressurection_message = False
+   boss_end_skill_message = False
 
    # снижение кулдауна игрока
    Characters.char.cooldown -= 1
@@ -30,7 +32,7 @@ def attack():
       miss_message = MyStrings.Text.miss_text.value + BotMessages.Message_text.miss_message(Characters.boss.miss_chance)
       # особое сообщения уворота Мела
       if Characters.boss.name == MyStrings.Text.mel_name.value:
-         Characters.boss.blazer_level += 1
+         Characters.boss.mel_blazer_level += 1
          mel_miss_message = MyStrings.Text.mel_miss_text.value
       # сообщение об увороте босса   
       else:
@@ -60,14 +62,14 @@ def attack():
       elif Characters.boss.stan_timer <= 0:
          boss_attack()
 
-   boss_endskill(message)
+   boss_end_skill_activation()
    bleeding(message)
    poison(message)
    regeneration(message)
 
    # применение способностей босса в конце раунда
    if Characters.boss.name == MyStrings.Text.dron_name.value:
-      Characters.boss.obida_level += 5
+      Characters.boss.dron_obida_level += 5
    elif Characters.boss.name == MyStrings.Text.sledovatel_name.value:
       Characters.char.busted_level += 20
 
@@ -121,5 +123,95 @@ def boss_attack():
          Characters.char.health_down(boss_attack_damage)
          boss_attack_message = BotMessages.Message_text.boss_attack_message()
       
+def boss_end_skill_activation():  
+   global boss_ressurection_message
+   global boss_end_skill_message
+
+   # проверка на уровень здоровья и статус воскрешения босса, применение воскрешения с выводом сообщения
+   if Characters.boss.resurrection == True and Characters.boss.health <= 200:
+      Characters.boss.resurrection = False
+      Characters.boss.health_up(800)
+      # особое сообщение если босс Чайковский
+      if Characters.boss.name == MyStrings.Text.chaikovskii_name.value:
+         boss_ressurection_message = BotMessages.Message_text.chaikovskii_ressurection_message()
+      # обычное сообщение воскрешения
+      else:
+         boss_ressurection_message = BotMessages.Message_text.boss_ressurection_message()
       
+   # применение завершающей способности Вива, вывод сообщения
+   elif Characters.boss.name == MyStrings.Text.viv_name.value:
+      Characters.boss.damage_up(Characters.boss.viv_damage_up_skill_value)
+      boss_end_skill_message = BotMessages.Message_text.viv_end_skill_message()
+
+   # применение завершающей рандомной способности Котенка, вывод сообщения
+   elif Characters.boss.name == MyStrings.Text.kitty_name.value and chance(Characters.boss.end_skill_chance) == True:
+      kitty_skill_choice = random.randint(0, 11)
+      # оглушение на игрока
+      if kitty_skill_choice > 5:
+         Characters.char.stan_timer = 1
+         boss_end_skill_message = BotMessages.Message_text.kitty_stan_message()
+      # кровотечение на игрока
+      elif kitty_skill_choice <= 5:
+         Characters.char.health_down(Characters.boss.kity_end_skill_damage)
+         Characters.char.bleeding = True
+         boss_end_skill_message = BotMessages.Message_text.kitty_bleeding_message()
+   
+   # применение завершающей способности Пьяного Лехи, вывод сообщения
+   elif Characters.boss.name == MyStrings.Text.drunk_leha_name.value:
+      Characters.boss.health_up_procent(Characters.boss.drunk_leha_boost_skill_value)
+      Characters.boss.damage_up_procent(Characters.boss.drunk_leha_boost_skill_value)
+      boss_end_skill_message = BotMessages.Message_text.drunk_leha_boost_message()
+      
+   # применение завершающей способности Доктора Лехи, вывод сообщения
+   elif Characters.boss.name == MyStrings.Text.doc_leha_name.value and chance(Characters.boss.end_skill_chance) == True:
+      Characters.char.health_down(Characters.boss.doc_leha_end_skill_damage)
+      Characters.char.bleeding = True
+      boss_end_skill_message = BotMessages.Message_text.doc_leha_bleeding_message()
+      
+   # применение завершающей способности Мела, вывод сообщения
+   elif Characters.boss.name == MyStrings.Text.mel_name.value and Characters.boss.mel_blazer_level >= 3:
+      Characters.boss.mel_blazer_level = 0
+      Characters.char.health_down(Characters.boss.mel_end_skill_damage)
+      boss_end_skill_message = BotMessages.Message_text.mel_end_skill_message()
+      
+   # применение завершающей способности Дрона, вывод сообщения
+   elif Characters.boss.name == MyStrings.Text.dron_name.value:
+      if chance(Characters.boss.dron_obida_level) == True:
+         Characters.char.health_down(Characters.boss.dron_end_skill_damage)
+         boss_end_skill_message = BotMessages.Message_text.dron_end_skill_message()
+         
+   # применение одной из рандомных завершающих способностей Валеры, вывод сообщения
+   elif Characters.boss.name == MyStrings.Text.glad_name.value:
+      glad_skill_choice = random.randint(1, 6)
+      # нанесение урона игроку
+      if glad_skill_choice == 1:
+         Characters.char.health_down(Characters.boss.glad_end_skill_damage)
+         boss_end_skill_message = BotMessages.Message_text.glad_damage_skill_message()
+      # увеличение здоровье Валеры
+      elif glad_skill_choice == 2:
+         Characters.boss.health_up(Characters.boss.glad_health_up_skill_value)
+         boss_end_skill_message = BotMessages.Message_text.glad_health_up_skill_message()
+      # увеличение шанса критической атаки Валеры
+      elif glad_skill_choice == 3:
+         Characters.boss.critical_chance_up(Characters.boss.glad_critical_up_skill_value)
+         boss_end_skill_message = BotMessages.Message_text.glad_critical_up_skill_message()
+      # уменьшение урона игрока
+      elif glad_skill_choice == 4:
+         Characters.char.damage_down(Characters.boss.glad_damage_down_skill_value)
+         boss_end_skill_message = BotMessages.Message_text.glad_damage_down_skill_message()
+      # наложение яда на игрока
+      elif glad_skill_choice == 5:
+         Characters.char.poison = True
+         boss_end_skill_message = BotMessages.Message_text.glad_poison_skill_message()
+
+   # применение завершающей способности Шивы, вывод сообщения
+   elif Characters.boss.name == MyStrings.Text.shiva_name.value:
+      # увеличение шанса критической атаки Шивы
+      if Characters.boss.critical_chance < 100:
+         Characters.boss.critical_chance_up(Characters.boss.shiva_critical_up_skill_value)
+         boss_end_skill_message = BotMessages.Message_text.shiva_critical_skill_message()
+      # увеличение атаки Шивы, если шанс критической атаки заполнен до максимума
+      elif Characters.boss.critical_chance >= 100:
+         Characters.boss.damage_up_procent(Characters.boss.shiva_damage_up_skill_value)
+         boss_end_skill_message = BotMessages.Message_text.shiva_damage_up_skill_message()    
       
