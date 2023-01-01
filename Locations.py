@@ -46,8 +46,8 @@ def location_choice(x):
    elif x == MyStrings.Text.bad_trip_name.value:
       loc = Location(20, 20, 0, x, MyStrings.Text.bad_trip_description.value, MyStrings.Text.bad_trip_icon.value)
       if Characters.char.name != MyStrings.Text.kolya_name.value and Characters.char.name != MyStrings.Text.temich_name.value:
-         Characters.Char.health_up_procent(Characters.char, loc.value1)
-         Characters.Char.damage_up_procent(Characters.char, loc.value2)
+         Characters.Char.health_down_procent(Characters.char, loc.value1)
+         Characters.Char.damage_down_procent(Characters.char, loc.value2)
          Location.pers_iteraction_message = MyStrings.Text.bad_trip_effect_text.value
 
       elif Characters.char.name == MyStrings.Text.temich_name.value:

@@ -9,36 +9,7 @@ import Locations
 import MyStrings
 import BotMessages
 import Fight
-bot = TeleBot('')
-
-def bleeding(message):
-   #кровотечение
-   if char.bleeding == True and char.immunity == False:
-      char.hp_debaff(100)
-      bot.send_message(message.from_user.id, '🩸Кровотечение🩸\n' + char.icon + '-100❤️')
-
-   elif boss.bleeding == True:
-      boss.hp_debaff(100)
-      bot.send_message(message.from_user.id, '🩸Кровотечение🩸\n' + boss.icon + '-100🖤')
-
-def poison(message):
-   #яд
-   if char.poison == True and char.immunity == False:
-      char.hp -= char.hp * parameters.poison_dmg // 100
-      bot.send_message(message.from_user.id, '🦠Отравление🦠\n-' + str(parameters.poison_dmg) + '%❤️')
-      parameters.poison_dmg += 10
-   if boss.poison == True:
-      boss.hp -= boss.hp * parameters.poison_dmg // 100
-      bot.send_message(message.from_user.id, '🦠Отравление🦠\n-' + str(parameters.poison_dmg) + '%🖤')
-      parameters.poison_dmg += 10
-
-def regeneration(message):
-   if char.regen > 0:
-      char.hp_baff(char.regen)
-      bot.send_message(message.from_user.id, '💕Регенерация💕\n' + char.icon + '+' + str(char.regen) + '❤️')
-   if boss.regen > 0:
-      boss.hp_baff(boss.regen)
-      bot.send_message(message.from_user.id, '💕Регенерация💕\n' + boss.icon + '+' + str(boss.regen) + '🖤')
+bot = TeleBot('2102427745:AAECFy-T6GfMWH1VNshsucAEXZEfzmGUZBk')
 
 @bot.message_handler(content_types=['text'])
 
@@ -179,10 +150,23 @@ def start_fight(message):
    bot.register_next_step_handler(msg, action_choice)
 
 def action_choice(message):
-   #применение выбранного игроком действия
+   # применение выбранного игроком действия
 
    if message.text == MyStrings.Text.attack_button_text.value:
+      # запуск цикла атаки, если игрок нажал "Атака"
       Fight.attack()
+
+      # проверка количества возникших сообщений в цикле атаки, их вывод
+      attack_message_true_list = [x for x in Fight.Attack_messages.list_generator() if x != False]
+      while len(attack_message_true_list) > 0:
+         bot.send_message(message.from_user.id, attack_message_true_list[0])
+         del attack_message_true_list[0]
+
+      # клавиатура с подтверждением конца хода
+      keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+      keyboard.add(MyStrings.Text.end_turn_button_text.value)
+      msg = bot.send_message(message.from_user.id, BotMessages.Message_text.versus_stats(Characters.char.name, Characters.boss.name), reply_markup=keyboard)
+      bot.register_next_step_handler(msg, victory_check)
 
    elif message.text == char.skill_name:
       if char.cooldown <= 0 and char.silence == False and char.stan_timer <= 0:
@@ -254,21 +238,25 @@ def item_using(x):
    x = False
 
 def victory_check(message):
-   #проверка на победу в раунде
+   # проверка на победу в конце раунда
 
-   if boss.hp > 0 and char.hp > 0:
+   if Characters.boss.health > 0 and Characters.char.health > 0:
+      # если и босс и игрок живы - переход к следующему раунду
       start_fight(message)
 
-   elif boss.hp <= 0 and char.hp > 0 and boss.name == MyStrings.Text.makar_name.value:
+   elif Characters.boss.health <= 0 and Characters.char.health > 0 and Characters.boss.name == MyStrings.Text.makar_name.value:
+      # если игрок победил финального босса Короля Макара - поздравительное сообщение, клавиатура с подтверждением перезапуска игры
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
       keyboard.add(MyStrings.Text.restart_button_text.value)
       msg = bot.send_message(message.from_user.id, text = MyStrings.Text.victory_game_text.value, reply_markup=keyboard)
       bot.register_next_step_handler(msg, get_character)
 
-   elif boss.hp <= 0 and char.hp > 0 and boss.name != MyStrings.Text.makar_name.value:
+   elif Characters.boss.health <= 0 and Characters.char.health > 0 and Characters.boss.name != MyStrings.Text.makar_name.value:
+      # если игрок победил обычного босса - переход на следующий уровень
       next_fight(message)
 
-   elif char.hp <= 0: 
+   elif Characters.char.hp <= 0: 
+      # если игрок проиграл, вывод сообщения
       bot.send_message(message.from_user.id, MyStrings.Text.game_over_text.value)
 
 def next_fight(message):

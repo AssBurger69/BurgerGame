@@ -27,8 +27,8 @@ class Message_text():
       elif x == MyStrings.Text.dron_name.value:
          return '{0}{1} {2}%{0}'.format(MyStrings.Text.obida_icon.value, MyStrings.Text.dron_skill_meter_text.value, Characters.boss.dron_obida_level)
 
-   def versus_stats(x, y):
-      str1 = Characters.char.icon + x + ' 🆚 ' + y + Characters.boss.icon
+   def versus_stats(char_name, boss_name):
+      str1 = Characters.char.icon + char_name + ' 🆚 ' + boss_name + Characters.boss.icon
       str2 = '❤️' + str(Characters.char.health)
       str3 = '🖤' + str(Characters.boss.health)
       str4 = '⚔️' + str(Characters.char.damage)
@@ -44,8 +44,8 @@ class Message_text():
    def black_stas_returnal_message():
       return '{0}\n{1}{2}{3}{4}'.format(MyStrings.Text.black_stas_returnal_text.value, Characters.char.icon, MyStrings.Text.minus.value, str(Characters.char.damage), MyStrings.Text.char_health_icon.value)
 
-   def stan_effect_message(x):
-      return '{0} {1}\n{2}'.format(x, MyStrings.Text.stan_text.value, MyStrings.Text.stan_icon.value)
+   def stan_effect_message(pers):
+      return '{0} {1}\n{2}'.format(pers, MyStrings.Text.stan_text.value, MyStrings.Text.stan_icon.value)
 
    def char_critical_attack_message():
       return '{0}{1}{0}\n{2}{3}{4}'.format(MyStrings.Text.critical_chance_icon.value, MyStrings.Text.critical_text, Characters.boss.icon, MyStrings.Text.minus.value, Fight.char_attack_damage, MyStrings.Text.boss_health_icon.value)
@@ -77,43 +77,52 @@ class Message_text():
       return '{0}\n{1}+{2}{3}'.format(MyStrings.Text.ressurection_text.value, Characters.char.icon, str(Characters.Char.ressurection_value), MyStrings.Text.char_health_icon.value)
 
    def viv_end_skill_message():
-      return '{0}\n{1}+{2}{3}'.format(MyStrings.Text.viv_end_skill_text.value, Characters.boss.icon, Characters.boss.viv_damage_up_skill_value, MyStrings.Text.damage_icon.value)
+      return '{0}\n{1}+{2}{3}'.format(MyStrings.Text.viv_end_skill_text.value, Characters.boss.icon, str(Characters.boss.viv_damage_up_skill_value), MyStrings.Text.damage_icon.value)
 
    def kitty_stan_message():
       return '{0}\n{1}+{2}'.format(MyStrings.Text.kitty_stan_text.value, Characters.char.icon, MyStrings.Text.stan_icon.value)
 
    def kitty_bleeding_message():
-      return '{}\n{}-{}{}'.format(MyStrings.Text.kitty_bleeding_text.value, Characters.char.icon, Characters.boss.kity_end_skill_damage, MyStrings.Text.char_health_icon.value, MyStrings.Text.bleeding_icon.value)
+      return '{}\n{}-{}{}'.format(MyStrings.Text.kitty_bleeding_text.value, Characters.char.icon, str(Characters.boss.kity_end_skill_damage), MyStrings.Text.char_health_icon.value, MyStrings.Text.bleeding_icon.value)
       
    def drunk_leha_boost_message():
-      return '{0}\n{1}+{2}%{3} +{2}%{4}'(MyStrings.Text.drunk_leha_skill_text.value, Characters.boss.icon, Characters.boss.drunk_leha_boost_skill_value, MyStrings.Text.boss_health_icon.value, MyStrings.Text.damage_icon.value)
+      return '{0}\n{1}+{2}%{3} +{2}%{4}'.format(MyStrings.Text.drunk_leha_skill_text.value, Characters.boss.icon, str(Characters.boss.drunk_leha_boost_skill_value), MyStrings.Text.boss_health_icon.value, MyStrings.Text.damage_icon.value)
    
    def doc_leha_bleeding_message():
-      return '{0}\n{1}-{2}{3}{4}'.format(MyStrings.Text.doc_leha_skill_text.value, Characters.char.icon, Characters.boss.doc_leha_end_skill_damage, MyStrings.Text.char_health_icon.value, MyStrings.Text.bleeding_icon.value)
+      return '{0}\n{1}-{2}{3}{4}'.format(MyStrings.Text.doc_leha_skill_text.value, Characters.char.icon, str(Characters.boss.doc_leha_end_skill_damage), MyStrings.Text.char_health_icon.value, MyStrings.Text.bleeding_icon.value)
 
    def mel_end_skill_message():
-      return '{0}\n{1}-{2}{3}'.format(MyStrings.Text.mel_end_skill_text.value, Characters.char.icon, Characters.boss.mel_end_skill_damage, MyStrings.Text.char_health_icon.value)
+      return '{0}\n{1}-{2}{3}'.format(MyStrings.Text.mel_end_skill_text.value, Characters.char.icon, str(Characters.boss.mel_end_skill_damage), MyStrings.Text.char_health_icon.value)
       
    def dron_end_skill_message():
-      return '{0}\n{1}-{2}{3}'.format(MyStrings.Text.dron_skill_text.value, Characters.char.icon, Characters.boss.dron_end_skill_damage, MyStrings.Text.char_health_icon.value)
+      return '{0}\n{1}-{2}{3}'.format(MyStrings.Text.dron_skill_text.value, Characters.char.icon, str(Characters.boss.dron_end_skill_damage), MyStrings.Text.char_health_icon.value)
       
    def glad_damage_skill_message():
-      return '{0}\n{1}-{2}{3}'.format(MyStrings.Text.glad_damage_skill_text.value, Characters.char.icon, Characters.boss.glad_end_skill_damage, MyStrings.Text.char_health_icon.value)
+      return '{0}\n{1}-{2}{3}'.format(MyStrings.Text.glad_damage_skill_text.value, Characters.char.icon, str(Characters.boss.glad_end_skill_damage), MyStrings.Text.char_health_icon.value)
    
    def glad_health_up_skill_message():
-      return '{0}\n{1}+{2}{3}'.format(MyStrings.Text.glad_health_up_skill_text.value, Characters.boss.icon, Characters.boss.glad_health_up_skill_value, MyStrings.Text.boss_health_icon.value)
+      return '{0}\n{1}+{2}{3}'.format(MyStrings.Text.glad_health_up_skill_text.value, Characters.boss.icon, str(Characters.boss.glad_health_up_skill_value), MyStrings.Text.boss_health_icon.value)
 
    def glad_critical_up_skill_message():
-      return '{0}\n{1}+{2}%{3}'.format(MyStrings.Text.glad_critical_up_skill_text.value, Characters.boss.icon, Characters.boss.glad_critical_up_skill_value, MyStrings.Text.critical_chance_icon.value)
+      return '{0}\n{1}+{2}%{3}'.format(MyStrings.Text.glad_critical_up_skill_text.value, Characters.boss.icon, str(Characters.boss.glad_critical_up_skill_value), MyStrings.Text.critical_chance_icon.value)
 
    def glad_damage_down_skill_message():
-      return '{0}\n{1}-{2}{3}'.format(MyStrings.Text.glad_damage_down_skill_text.value, Characters.char.icon, Characters.boss.glad_damage_down_skill_value, MyStrings.Text.damage_icon.value)
+      return '{0}\n{1}-{2}{3}'.format(MyStrings.Text.glad_damage_down_skill_text.value, Characters.char.icon, str(Characters.boss.glad_damage_down_skill_value), MyStrings.Text.damage_icon.value)
 
    def glad_poison_skill_message():
       return '{0}\n{1}+{2}'.format(MyStrings.Text.glad_poison_skill_text.value, Characters.char.icon, MyStrings.Text.poison_icon.value)
 
    def shiva_critical_skill_message():
-      return '{0}\n{1}+{2}%{3}'.format(MyStrings.Text.shiva_critical_up_skill_text.value, Characters.boss.icon, Characters.boss.shiva_critical_up_skill_value, MyStrings.Text.critical_chance_icon.value)
+      return '{0}\n{1}+{2}%{3}'.format(MyStrings.Text.shiva_critical_up_skill_text.value, Characters.boss.icon, str(Characters.boss.shiva_critical_up_skill_value), MyStrings.Text.critical_chance_icon.value)
 
    def shiva_damage_up_skill_message():
-      return '{0}\n{1}+{2}%{3}'.format(MyStrings.Text.shiva_damage_up_skill_text.value, Characters.boss.icon, Characters.boss.shiva_damage_up_skill_value, MyStrings.Text.damage_icon.value)
+      return '{0}\n{1}+{2}%{3}'.format(MyStrings.Text.shiva_damage_up_skill_text.value, Characters.boss.icon, str(Characters.boss.shiva_damage_up_skill_value), MyStrings.Text.damage_icon.value)
+
+   def bleeding_message(pers_icon, pers_health_icon):
+      return '{0}\n{1}-{2}{3}'.format(MyStrings.Text.bleeding_text.value, pers_icon, str(Characters.Pers.bleeding_damage), pers_health_icon)
+
+   def poison_message(pers_icon, pers_health_icon):
+      return '{0}\n{1}-{2}%{3}'.format(MyStrings.Text.poison_text.value, pers_icon, str(Characters.Pers.poison_damage), pers_health_icon)
+
+   def regeneration_message(pers_icon, pers_health_icon):
+      return '{0}\n{1}+{2}{3}'.format(MyStrings.Text.regeneration_text, pers_icon, str(Characters.Pers.regeneration_value), pers_health_icon)

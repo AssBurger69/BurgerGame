@@ -2,10 +2,12 @@ import MyStrings
 import random
 
 class Pers():
-   poison_dmg = 10
+   poison_damage = 10
+   bleeding_damage = 100
    win_rate = 0
    wanted_level = False
    ressurection_value = 800
+   regeneration_value = 100
 
    def __init__(self, name, health, damage, critical_chance, miss_chance, lifesteal, regeneration, description):
       self.name = name
@@ -36,7 +38,6 @@ class Pers():
       self.damage += value
    def damage_up_procent(self, value):
       self.damage += self.damage * value // 100
-      print(self.damage)
 
    def critical_chance_down(self, value):
       self.critical_chance -= value
