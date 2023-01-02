@@ -77,8 +77,17 @@ class Char(Pers):
    stan_timer = 0
    cooldown = 0
    busted_level = 0
-   elex_count = 0
+   mitya_elexir_count = 0
    sueta_count = 0
+   mitya_health_down_skill_value = 100
+   mitya_damage_up_skill_value = 200
+   toshik_health_up_skill_procent = 20
+   toshik_passive_skill_procent = 5
+   kolya_skill_procent = 50
+   temich_skill_chance = 21
+   sanya_win_sanya_heath_up_procent = 20
+   sanya_win_sanya_damage_up_procent = 20
+   sanya_win_sanya_critical_up_procent = 10
    poison = False
    bleeding = False
    silence = False
@@ -132,7 +141,7 @@ def char_get_stats(x):
       char = Char(MyStrings.Text.sanya_name.value, 1000, 200, 30, 0, 0, 0, MyStrings.Text.sanya_description_text.value, MyStrings.Text.sanya_skill_button_text.value, MyStrings.Text.sanya_icon.value)
       
    elif x == MyStrings.Text.toshik_name.value:
-      char = Char(MyStrings.Text.toshik_name.value, 1500, 100, 0, 0, 0, 0, MyStrings.Text.temich_description_text.value, MyStrings.Text.toshik_skill_button_text.value, MyStrings.Text.toshik_icon.value)
+      char = Char(MyStrings.Text.toshik_name.value, 1500, 100, 0, 0, 0, 0, MyStrings.Text.toshik_description_text.value, MyStrings.Text.toshik_skill_button_text.value, MyStrings.Text.toshik_icon.value)
       
    elif x == MyStrings.Text.kolya_name.value:
       char = Char(MyStrings.Text.kolya_name.value, 1200, 100, 0, 0, 0, 0, MyStrings.Text.kolya_description_text.value, MyStrings.Text.kolya_skill_button_text.value, MyStrings.Text.kolya_icon.value)
@@ -225,34 +234,34 @@ def boss_difficult_choice(x):
    elif x == 9:
       boss_name = [MyStrings.Text.makar_name.value]
 
-def boss_prelude_skill_activation(x):
+def boss_prelude_skill_activation(boss_name):
    global prelude_skill_message
    
    prelude_skill_message = False
 
-   if x == MyStrings.Text.palich_name.value:
+   if boss_name == MyStrings.Text.palich_name.value:
       char.silence = True
       prelude_skill_message = MyStrings.Text.palich_prelude_text.value
 
-   elif boss.name == MyStrings.Text.redhead_name.value:
+   elif boss_name == MyStrings.Text.redhead_name.value:
       char.poison = True
       prelude_skill_message = MyStrings.Text.redhead_prelude_text.value
 
-   elif boss.name == MyStrings.Text.sledovatel_name.value:
+   elif boss_name == MyStrings.Text.sledovatel_name.value:
       drugs = MyStrings.Text.marki_name.value, MyStrings.Text.madam_name.value, MyStrings.Text.marki_name.value
       cross_check = [x for x in drugs if x in char.all_items]
       if char.damage > 500:
          char.health_down_procent(50)
          prelude_skill_message = MyStrings.Text.sledovatel_damage_prelude_text.value
-      elif char.elex_count > 0 or len(cross_check) > 0:
+      elif char.mitya_elexir_count > 0 or len(cross_check) > 0:
          char.busted_level += 50
          prelude_skill_message = MyStrings.Text.sledovatel_drugcheck_text.value
-      elif char.damage > 500 and char.elex_count > 0 or len(cross_check) > 0:
+      elif char.damage > 500 and char.mitya_elexir_count > 0 or len(cross_check) > 0:
          char.health_down_procent(50)
          char.busted_level += 50
          prelude_skill_message = MyStrings.Text.sledovatel_damage_prelude_text.value + '\n' + MyStrings.Text.sledovatel_drugcheck_text.value
 
-   elif boss.name == MyStrings.Text.dron_name.value:
+   elif boss_name == MyStrings.Text.dron_name.value:
       obida_level = 0
       obida_level += len(char.all_items) * 5
       prelude_skill_message = MyStrings.Text.dron_bratishki_text.value
@@ -260,11 +269,11 @@ def boss_prelude_skill_activation(x):
          obida_level += 10
          prelude_skill_message += '\n' + MyStrings.Text.dron_dron_meat_text.value
 
-   elif boss.name == MyStrings.Text.doner_name.value and MyStrings.Text.everlast_name.value in char.all_items:
+   elif boss_name == MyStrings.Text.doner_name.value and MyStrings.Text.everlast_name.value in char.all_items:
       boss.health_up_procent(10)
       boss.damage_up_procent(10)
       prelude_skill_message = MyStrings.Text.doner_everlast_text.value
 
-   elif boss.name == MyStrings.Text.black_stas_name.value and char.name == MyStrings.Text.mitya_name.value:
-      boss.damage_up(char.elex_count * 200)
+   elif boss_name == MyStrings.Text.black_stas_name.value and char.name == MyStrings.Text.mitya_name.value:
+      boss.damage_up(char.mitya_elexir_count * 200)
       prelude_skill_message = MyStrings.Text.black_stas_mitya_text.value

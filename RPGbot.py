@@ -117,12 +117,13 @@ def boss_choice(message):
 
 def location(message):
    # случайный выбор локации и применение ее свойств
-   Locations.location_choice(Locations.Location.location_name)
+   Locations.location_choice(random.choice(Locations.Location.location_list))
 
    # описание локации и дополнительного взаимодействия с ней персонажей
    bot.send_message(message.from_user.id, BotMessages.Message_text.location_description_message())
    if Locations.Location.pers_iteraction_message != False:
       bot.send_message(message.from_user.id, Locations.Location.pers_iteraction_message)
+      Locations.Location.pers_iteraction_message = False
 
    # клавиатура с выводом характеристик игрока и запросом боя
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
@@ -131,14 +132,15 @@ def location(message):
    bot.register_next_step_handler(msg, start_fight)
 
 def start_fight(message):
-   # применение способности босса перед боем и вывод ее описания
+   # применение способности босса перед боем, отсылка сообщения с ее описанием
    Characters.boss_prelude_skill_activation(Characters.boss.name)
    if Characters.prelude_skill_message != False:
       bot.send_message(message.from_user.id, Characters.prelude_skill_message)
+      Characters.prelude_skill_message = False
 
    # проверка на наличие накопительной способности босса и вывод сообщения с процентом ее заполнения
    if Characters.boss.name == MyStrings.Text.sledovatel_name.value or Characters.boss.name == MyStrings.Text.dron_name.value:
-      bot.send_message(message.from_user.id, text = BotMessages.Message_text.boss_skill_meter_message())
+      bot.send_message(message.from_user.id, BotMessages.Message_text.boss_skill_meter_message(Characters.boss.name))
 
    # вывод характеристик игрока и босса
    bot.send_message(message.from_user.id, BotMessages.Message_text.versus_stats(Characters.char.name, Characters.boss.name))
@@ -157,85 +159,45 @@ def action_choice(message):
       Fight.attack()
 
       # проверка количества возникших сообщений в цикле атаки, их вывод
-      attack_message_true_list = [x for x in Fight.Attack_messages.list_generator() if x != False]
-      while len(attack_message_true_list) > 0:
-         bot.send_message(message.from_user.id, attack_message_true_list[0])
-         del attack_message_true_list[0]
+      while len(Fight.Attack_messages.attack_messages_list) > 0:
+         bot.send_message(message.from_user.id, Fight.Attack_messages.attack_messages_list[0])
+         del Fight.Attack_messages.attack_messages_list[0]
 
-      # клавиатура с подтверждением конца хода
+      # клавиатура с подтверждением конца хода, переход на проверку победы в бою
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
       keyboard.add(MyStrings.Text.end_turn_button_text.value)
       msg = bot.send_message(message.from_user.id, BotMessages.Message_text.versus_stats(Characters.char.name, Characters.boss.name), reply_markup=keyboard)
       bot.register_next_step_handler(msg, victory_check)
 
-   elif message.text == char.skill_name:
-      if char.cooldown <= 0 and char.silence == False and char.stan_timer <= 0:
-         char.cooldown = 0
-         skill(char.name)
-         bot.send_message(message.from_user.id, skill_description)
-      elif char.stan_timer > 0:
-         bot.send_message(message.from_user.id, MyStrings.Text.char_stan_text.value)
-      elif char.silence == True:
-         bot.send_message(message.from_user.id, MyStrings.Text.char_silence_text.value)
-      elif char.cooldown > 0:
-         bot.send_message(message.from_user.id, MyStrings.Text.cooldown_text.value)
+   elif message.text == Characters.char.skill_name:
+      # применение способности, если игрок нажал "Скилл"
+      Fight.char_skill_use()
+
+      # отсылка сообщения
+      bot.send_message(message.from_user.id, Fight.Attack_messages.skill_use_message)
+
+      # переход на проверку победы в бою
       victory_check(message)
 
-   elif message.text == char.item:
-      if char.item != MyStrings.Text.empty_text.value and char.silence == False and char.stan_timer <= 0:
-         item_using(char.item)
-         char.item = MyStrings.Text.empty_text.value
-         bot.send_message(message.from_user.id, item_dscr)
-      elif char.stan_timer > 0:
-         bot.send_message(message.from_user.id, MyStrings.Text.char_stan_text.value)
-      elif char.item != MyStrings.Text.empty_text.value and char.silence == True:
-         bot.send_message(message.from_user.id, MyStrings.Text.char_silence_text.value)
-      elif char.item == MyStrings.Text.empty_text.value:
-         bot.send_message(message.from_user.id, MyStrings.Text.empty_click_text.value)   
+   elif message.text == Characters.char.item:
+      # применение предмета, если игрок нажал "Предмет"
+      Fight.char_item_use()
+
+      # отсылка сообщения 
+      bot.send_message(message.from_user.id, Fight.Attack_messages.item_use_message)
+
+      # особое сообщение, если предмет влияет на конкретного игрока
+      if Drop.Item.char_iteraction_message != False:
+         bot.send_message(message.from_user.id, Drop.Item.char_iteraction_message)
+         Drop.Item.char_iteraction_message = False
+
+      # особое сообщение, если предмет влияент на конкретного босса
+      if Drop.Item.boss_iteraction_message != False:
+         bot.send_message(message.from_user.id, Drop.Item.boss_iteraction_message)
+         Drop.Item.boss_iteraction_message = False 
+
+      # переход на проверку победы в бою
       victory_check(message)
-      
-def skill(x):
-   #использование скилла персонажа
-   global skill_description
-
-   if x == MyStrings.Text.mitya_name.value:
-      char.hp_debaff(100)
-      char.dmg_baff(200)
-      char.cooldown = 1
-      char.elex_count += 1
-      skill_description = MyStrings.Text.mitya_skill_effect_text.value
-
-   elif x == MyStrings.Text.sanya_name.value:
-      damage = random.randint(50, 500)
-      boss.hp_debaff(damage)
-      char.cooldown = 3
-      skill_description = boss.icon + '-' + str(damage) + MyStrings.Text.sanya_skill_effect_text.value
-
-   elif x == MyStrings.Text.toshik_name.value:
-      char.hp += char.hp * 20 // 100
-      char.cooldown = 2
-      skill_description = MyStrings.Text.toshik_skill_effect_text.value
-
-   elif x == MyStrings.Text.kolya_name.value:
-      hack_value = boss.dmg * 50 // 100
-      char.dmg += hack_value
-      boss.dmg -= hack_value
-      char.cooldown = 3
-      skill_description = boss.icon + '-' + str(hack_value) + '⚔️\n' + char.icon + '+' + str(hack_value) + MyStrings.Text.kolya_skill_effect_text.value
-
-   elif x == MyStrings.Text.temich_name.value:
-      skill_check_temich = chance(21)
-      if skill_check_temich == False:
-         boss.hp, char.hp = char.hp, boss.hp
-         char.cooldown = 1
-         skill_description = MyStrings.Text.temich_skill_effect_text.value
-      elif skill_check_temich == True:
-         char.stan_timer = 1
-         skill_description = MyStrings.Text.temich_skill_deffect_text.value + char.icon + '+💤'
-
-def item_using(x):
-   #использование предмета персонажа
-   x = False
 
 def victory_check(message):
    # проверка на победу в конце раунда
@@ -255,31 +217,23 @@ def victory_check(message):
       # если игрок победил обычного босса - переход на следующий уровень
       next_fight(message)
 
-   elif Characters.char.hp <= 0: 
+   elif Characters.char.health <= 0: 
       # если игрок проиграл, вывод сообщения
       bot.send_message(message.from_user.id, MyStrings.Text.game_over_text.value)
 
 def next_fight(message):
-   #конец боя после победы
+   # обнуление статусов игрока, повышение счетчика побед
+   Fight.fight_victory()
 
-   char.cooldown = 0
-   parameters.win_rate += 1
-   char.poison = False
-   char.bleeding = False
-   char.silence = False
-   parameters.poison_dmg = 5
-   char.busted_level = 0
+   # особое сообщение если игрок Саня победил босса Саню
+   if Fight.Attack_messages.sanya_win_sanya_message != False:
+      bot.send_message(message.from_user.id, Fight.Attack_messages.sanya_win_sanya_message)
 
-   if parameters.win_rate < 8 and boss.name == MyStrings.Text.sanya_name.value:
-      char.hp += char.hp * 20 // 100
-      char.dmg += char.dmg * 20 // 100
-      char.crit_baff(5)
-      bot.send_message(message.from_user.id, MyStrings.Text.sanya_sasha_text.value)
+   # особое сообщение для пассивной способности игрока Тошик
+   elif Fight.Attack_messages.toshik_passive_skill_message != False:
+      bot.send_message(message.from_user.id, Fight.Attack_messages.toshik_passive_skill_message)
 
-   elif parameters.win_rate < 8 and char.name == MyStrings.Text.toshik_name.value:
-      char.dmg += char.hp * 5 // 100
-      bot.send_message(message.from_user.id, MyStrings.Text.toshik_passive_text.value)
-
+   # клавиатура с подтверждением перехода на следующий уровень
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
    keyboard.add(MyStrings.Text.victory_button_text.value)
    msg = bot.send_message(message.from_user.id, text = MyStrings.Text.victory_fight_text.value, reply_markup=keyboard)

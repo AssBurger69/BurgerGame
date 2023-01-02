@@ -119,10 +119,10 @@ def bratishki_enter(x):
    if x not in Characters.char.all_items:
       Characters.char.all_items.append(x)
 
-def item_usage(x):
+def item_activation(item_name):
    global item
 
-   if x == MyStrings.Text.zhiguli_name.value:
+   if item_name == MyStrings.Text.zhiguli_name.value:
       item = Item(150, MyStrings.Text.zhiguli_description.value)
       if Characters.boss.name == MyStrings.Text.doner_name.value:
          item.boss_iteraction_message = MyStrings.Text.doner_booze_text.value
@@ -130,32 +130,32 @@ def item_usage(x):
       else:
          Characters.char.health_up(item.value)
 
-   elif x == MyStrings.Text.sidr_name.value:
-      item = Item(300, MyStrings.Text.zhiguli_description.value)
+   elif item_name == MyStrings.Text.sidr_name.value:
+      item = Item(300, MyStrings.Text.sidr_description.value)
       if Characters.boss.name == MyStrings.Text.doner_name.value:
          item.boss_iteraction_message = MyStrings.Text.doner_booze_text.value
          Characters.boss.health_up(item.value)
       else:
          Characters.char.health_up(item.value)
 
-   elif x == MyStrings.Text.bagbeer_name.value:
-      item = Item(500, MyStrings.Text.zhiguli_description.value)
+   elif item_name == MyStrings.Text.bagbeer_name.value:
+      item = Item(500, MyStrings.Text.bagbeer_description.value)
       if Characters.boss.name == MyStrings.Text.doner_name.value:
          item.boss_iteraction_message = MyStrings.Text.doner_booze_text.value
          Characters.boss.health_up(item.value)
       else:
          Characters.char.health_up(item.value)
 
-   elif x == MyStrings.Text.mineralka_name.value:
+   elif item_name == MyStrings.Text.mineralka_name.value:
       item - Item(100, MyStrings.Text.mineralka_description.value)
       Characters.char.regeneration_up(item.value)
 
-   elif x == MyStrings.Text.lezvie_name.value:
+   elif item_name == MyStrings.Text.lezvie_name.value:
       item = Item(150, MyStrings.Text.lezvie_description.value)
       Characters.boss.health_down(item.value)
       Characters.boss.bleeding = True
 
-   elif x == MyStrings.Text.travmat_name.value:
+   elif item_name == MyStrings.Text.travmat_name.value:
       item = Item(300, MyStrings.Text.travmat_description.value)
       if Characters.boss.name == MyStrings.Text.viv_name.value:
          Characters.char.health_down(item.value)
@@ -165,7 +165,7 @@ def item_usage(x):
          Characters.boss.health_down(item.value)
          Characters.boss.bleeding = True
 
-   elif x == MyStrings.Text.cola_name.value:
+   elif item_name == MyStrings.Text.cola_name.value:
       item = Item(500, MyStrings.Text.cola_description.value)
       if Characters.boss.name == MyStrings.Text.doner_name.value:
          Characters.char.health_down(item.value)
@@ -174,7 +174,7 @@ def item_usage(x):
       else:
          Characters.boss.health_down(item.value)
 
-   elif x == MyStrings.Text.sick_sock_name.value:
+   elif item_name == MyStrings.Text.sick_sock_name.value:
       item = Item(100, MyStrings.Text.sick_sock_description.value)
       if Characters.boss.name == MyStrings.Text.doner_name.value:
          item.boss_iteraction_message = MyStrings.Text.doner_sock_text.value
@@ -184,7 +184,7 @@ def item_usage(x):
          Characters.boss.health_down(item.value)
          Characters.boss.poison = True
 
-   elif x == MyStrings.Text.harchok_name.value:
+   elif item_name == MyStrings.Text.harchok_name.value:
       item = Item(200, MyStrings.Text.harchok_description.value)
       if Characters.boss.name == MyStrings.Text.doner_name.value:
          Characters.boss.health_up(item.value)
@@ -193,7 +193,7 @@ def item_usage(x):
          Characters.boss.health_down(item.value)
          Characters.boss.poison = True
 
-   elif x == MyStrings.Text.rampag_name.value:
+   elif item_name == MyStrings.Text.rampag_name.value:
       item = Item(1, MyStrings.Text.rampag_description.value)
       if Characters.boss.name == MyStrings.Text.doner_name.value:
          item.boss_iteraction_message = MyStrings.Text.doner_rampag_text.value
@@ -201,16 +201,16 @@ def item_usage(x):
       else:
          Characters.boss.stan_timer = 1
 
-   elif x == MyStrings.Text.rolex_name.value:
+   elif item_name == MyStrings.Text.rolex_name.value:
       item = Item(0, MyStrings.Text.rolex_description.value)
       Characters.char.cooldown = item.value
 
-   elif x == MyStrings.Text.vaccine_name.value:
+   elif item_name == MyStrings.Text.vaccine_name.value:
       item = Item(0, MyStrings.Text.vaccine_description.value)
       Characters.char.poison = False
       Characters.char.bleeding = False
 
-   elif x == MyStrings.Text.shiga_name.value:
+   elif item_name == MyStrings.Text.shiga_name.value:
       item = Item(30, False)
       foods = MyStrings.Text.sochnik_name.value, MyStrings.Text.dubai_name.value, MyStrings.Text.dron_meat_name.value, MyStrings.Text.pizza5_name.value
       cross_check = [x for x in foods if x in Characters.char.all_items]
@@ -223,7 +223,7 @@ def item_usage(x):
          Characters.char.damage_up_procent(item.value)
          item.description = MyStrings.Text.shiga_buff_description.value
 
-   elif x == MyStrings.Text.madam_name.value:
+   elif item_name == MyStrings.Text.madam_name.value:
       item = Item(50, MyStrings.Text.madam_description.value)
       Characters.boss.damage_down_procent(item.value)
       

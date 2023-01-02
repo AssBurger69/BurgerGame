@@ -21,10 +21,10 @@ class Message_text():
    def boss_item_iteraction_message(x):
       return '{0}\n{1}{2}{3}'.format(x, Characters.boss.icon, MyStrings.Text.plus.value, Drop.item.value)
 
-   def boss_skill_meter_message(x):
-      if x == MyStrings.Text.sledovatel_name.value:
+   def boss_skill_meter_message(boss_name):
+      if boss_name == MyStrings.Text.sledovatel_name.value:
          return '{0}{1} {2}%{0}'.format(MyStrings.Text.chains_icon.value, MyStrings.Text.sledovatel_skill_meter_text.value, Characters.char.busted_level)
-      elif x == MyStrings.Text.dron_name.value:
+      elif boss_name == MyStrings.Text.dron_name.value:
          return '{0}{1} {2}%{0}'.format(MyStrings.Text.obida_icon.value, MyStrings.Text.dron_skill_meter_text.value, Characters.boss.dron_obida_level)
 
    def versus_stats(char_name, boss_name):
@@ -48,7 +48,7 @@ class Message_text():
       return '{0} {1}\n{2}'.format(pers, MyStrings.Text.stan_text.value, MyStrings.Text.stan_icon.value)
 
    def char_critical_attack_message():
-      return '{0}{1}{0}\n{2}{3}{4}'.format(MyStrings.Text.critical_chance_icon.value, MyStrings.Text.critical_text, Characters.boss.icon, MyStrings.Text.minus.value, Fight.char_attack_damage, MyStrings.Text.boss_health_icon.value)
+      return '{0}{1}{0}\n{2}{3}{4}'.format(MyStrings.Text.critical_chance_icon.value, MyStrings.Text.critical_text.value, Characters.boss.icon, MyStrings.Text.minus.value, Fight.char_attack_damage, MyStrings.Text.boss_health_icon.value)
 
    def char_attack_message():
       return '{0}{1}{2}{3}'.format(Characters.boss.icon, MyStrings.Text.minus.value, Fight.char_attack_damage, MyStrings.Text.boss_health_icon.value)
@@ -62,7 +62,7 @@ class Message_text():
       return '{0}{1}{0}\n{2}{3}{4}{5}{6}'.format(MyStrings.Text.returnal_icon.value, MyStrings.Text.returnal_text.value, indent, Characters.char.icon, MyStrings.Text.minus.value, Fight.char_attack_damage * Characters.boss.returnal_value // 100, MyStrings.Text.char_health_icon.value)
 
    def boss_critical_attack_message():
-      return '{0}{1}{0}\n{2}{3}{4}'.format(MyStrings.Text.critical_chance_icon.value, MyStrings.Text.critical_text, Characters.char.icon, MyStrings.Text.minus.value, Fight.boss_attack_damage, MyStrings.Text.char_health_icon.value)
+      return '{0}{1}{0}\n{2}{3}{4}'.format(MyStrings.Text.critical_chance_icon.value, MyStrings.Text.critical_text.value, Characters.char.icon, MyStrings.Text.minus.value, Fight.boss_attack_damage, MyStrings.Text.char_health_icon.value)
 
    def boss_attack_message():
       return '{0}{1}{2}{3}'.format(Characters.char.icon, MyStrings.Text.minus.value, Fight.boss_attack_damage, MyStrings.Text.char_health_icon.value)
@@ -125,4 +125,13 @@ class Message_text():
       return '{0}\n{1}-{2}%{3}'.format(MyStrings.Text.poison_text.value, pers_icon, str(Characters.Pers.poison_damage), pers_health_icon)
 
    def regeneration_message(pers_icon, pers_health_icon):
-      return '{0}\n{1}+{2}{3}'.format(MyStrings.Text.regeneration_text, pers_icon, str(Characters.Pers.regeneration_value), pers_health_icon)
+      return '{0}\n{1}+{2}{3}'.format(MyStrings.Text.regeneration_text.value, pers_icon, str(Characters.Pers.regeneration_value), pers_health_icon)
+
+   def sanya_skill_message():
+      return '{0}-{1}{2}'.format(Characters.boss.icon, str(Fight.sanya_skill_damage), MyStrings.Text.sanya_skill_effect_text.value)
+
+   def kolya_skill_message():
+      return '{0}-{1}{2}\n{3}+{1}{2}\n{4}'.format(Characters.boss.icon, str(Fight.kolya_hack_damage_value), MyStrings.Text.damage_icon.value, Characters.char.icon, MyStrings.Text.kolya_skill_effect_text.value)
+
+   def temich_skill_stan_message():
+      return '{0}\n{1}+{2}'.format(MyStrings.Text.temich_skill_deffect_text.value, Characters.char.icon, MyStrings.Text.stan_icon.value)

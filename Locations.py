@@ -72,7 +72,7 @@ def location_choice(x):
       
    elif x == MyStrings.Text.army_name.value:
       loc = Location(50, 30, 0, x, MyStrings.Text.army_description.value, MyStrings.Text.army_icon.value)
-      Characters.Char.health_up_procent(Characters.char, loc.value1)
+      Characters.Char.health_down_procent(Characters.char, loc.value1)
       Characters.Char.damage_up_procent(Characters.char, loc.value2)
 
    elif x == MyStrings.Text.drochilnya_name.value:
