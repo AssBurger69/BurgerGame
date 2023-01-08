@@ -13,37 +13,38 @@ bot = TeleBot('2102427745:AAECFy-T6GfMWH1VNshsucAEXZEfzmGUZBk')
 
 @bot.message_handler(content_types=['text'])
 
-def get_character(message):
+def choose_hero(message):
    # приветственное сообщение
    bot.send_message(message.from_user.id, MyStrings.Text.hello_text.value)
    
    # клавиатура с кнопками выбора героев
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-   keyboard.add(MyStrings.Text.mitya_name.value, MyStrings.Text.sanya_name.value, MyStrings.Text.toshik_name.value, MyStrings.Text.kolya_name.value, MyStrings.Text.temich_name.value)
-   msg = bot.send_message(message.from_user.id, text = MyStrings.Text.char_choice_text.value, reply_markup=keyboard)
-   bot.register_next_step_handler(msg, char_creation)
+   keyboard.add(MyStrings.Text.mitya_name.value, MyStrings.Text.sanya_name.value, MyStrings.Text.toshik_name.value,
+                MyStrings.Text.kolya_name.value, MyStrings.Text.temich_name.value)
+   msg = bot.send_message(message.from_user.id, text = MyStrings.Text.choose_hero_text.value, reply_markup=keyboard)
+   bot.register_next_step_handler(msg, player_creation)
 
-def char_creation(message):
+def player_creation(message):
    # назначение характеристик выбранному герою
-   Characters.char_get_stats(message.text)
+   Characters.player_get_stats(message.text)
 
    # сообщение с характеристиками героя
-   bot.send_message(message.from_user.id, BotMessages.Message_text.char_description_message())
+   bot.send_message(message.from_user.id, BotMessages.Message_text.hero_description_message())
 
    # клавиатура с подтверждением выбора героя
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-   keyboard.add(MyStrings.Text.ready_key_text.value, MyStrings.Text.another_char_key_text.value)
-   msg = bot.send_message(message.from_user.id, text = MyStrings.Text.char_choice_question.value, reply_markup=keyboard)
+   keyboard.add(MyStrings.Text.ready_button_text.value, MyStrings.Text.another_hero_button_text.value)
+   msg = bot.send_message(message.from_user.id, text = MyStrings.Text.player_confirmed_question.value, reply_markup=keyboard)
    bot.register_next_step_handler(msg, shop_choice)
 
 def shop_choice(message):
    # перезапуск если герой не подтвержден игроком
-   if message.text == MyStrings.Text.another_char_key_text.value:
+   if message.text == MyStrings.Text.another_hero_button_text.value:
       bot.send_message(message.from_user.id, MyStrings.Text.give_answer_text.value)
-      bot.register_next_step_handler(message, get_character)
+      bot.register_next_step_handler(message, choose_hero)
    
    # клавиатура с выбором магазина при подтверждении героя или победе в бою
-   elif message.text == MyStrings.Text.ready_key_text.value or MyStrings.Text.victory_button_text.value:
+   elif message.text == MyStrings.Text.ready_button_text.value or MyStrings.Text.victory_button_text.value:
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
       keyboard.add(MyStrings.Text.stas_shop_name.value, MyStrings.Text.bratishki_shop_name.value)
       msg = bot.send_message(message.from_user.id, text = MyStrings.Text.shop_choice_text.value, reply_markup=keyboard)
@@ -88,23 +89,23 @@ def stats_upgrade(message):
    # клавитура с выводом характеристик игрока и запросом босса
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
    keyboard.add(MyStrings.Text.boss_choice_question.value)
-   msg = bot.send_message(message.from_user.id, text = BotMessages.Message_text.char_stats_message(), reply_markup=keyboard)
+   msg = bot.send_message(message.from_user.id, text = BotMessages.Message_text.player_stats_message(), reply_markup=keyboard)
    bot.register_next_step_handler(msg, boss_choice)
 
 def boss_choice(message):
    # выбор уровня сложности босса в зависимости от количества побед
-   Characters.boss_difficult_choice(Characters.Char.win_rate)
+   Characters.boss_difficult_choice(Characters.Player.win_rate)
 
    # назначение характеристик боссу
    Characters.boss_get_stats(Characters.boss_name)
 
    # проверка в розыске ли игрок, приминение свйоств если да
-   if Characters.char.wanted_level == True:
+   if Characters.player.wanted_level == True:
       Characters.boss.resurrection = True
       bot.send_message(message.from_user.id, MyStrings.Text.boss_police_upgrade_text.value)
 
    # проверка является ли игрок Сашей Шлякиным при битве с Сашей Шлякиным, с перезапуском если да
-   if Characters.boss.name == MyStrings.Text.sasha_name.value and Characters.char.name != MyStrings.Text.sanya_name.value:
+   if Characters.boss.name == MyStrings.Text.sasha_name.value and Characters.player.name != MyStrings.Text.sanya_name.value:
       bot.send_message(message.from_user.id, MyStrings.Text.sasha_bye_text.value)
       boss_choice(message)
 
@@ -128,7 +129,7 @@ def location(message):
    # клавиатура с выводом характеристик игрока и запросом боя
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
    keyboard.add(MyStrings.Text.get_fight_button_text.value)
-   msg = bot.send_message(message.from_user.id, text = BotMessages.Message_text.char_stats_message(), reply_markup=keyboard)
+   msg = bot.send_message(message.from_user.id, text = BotMessages.Message_text.player_stats_message(), reply_markup=keyboard)
    bot.register_next_step_handler(msg, start_fight)
 
 def start_fight(message):
@@ -143,11 +144,11 @@ def start_fight(message):
       bot.send_message(message.from_user.id, BotMessages.Message_text.boss_skill_meter_message(Characters.boss.name))
 
    # вывод характеристик игрока и босса
-   bot.send_message(message.from_user.id, BotMessages.Message_text.versus_stats(Characters.char.name, Characters.boss.name))
+   bot.send_message(message.from_user.id, BotMessages.Message_text.versus_stats(Characters.player.name, Characters.boss.name))
 
    # клавиатура с выбором действий игрока
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-   keyboard.add(MyStrings.Text.attack_button_text.value, Characters.char.skill_name, Characters.char.item)
+   keyboard.add(MyStrings.Text.attack_button_text.value, Characters.player.skill_name, Characters.player.item)
    msg = bot.send_message(message.from_user.id, text = MyStrings.Text.start_turn_text.value, reply_markup=keyboard)
    bot.register_next_step_handler(msg, action_choice)
 
@@ -166,12 +167,12 @@ def action_choice(message):
       # клавиатура с подтверждением конца хода, переход на проверку победы в бою
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
       keyboard.add(MyStrings.Text.end_turn_button_text.value)
-      msg = bot.send_message(message.from_user.id, BotMessages.Message_text.versus_stats(Characters.char.name, Characters.boss.name), reply_markup=keyboard)
+      msg = bot.send_message(message.from_user.id, BotMessages.Message_text.versus_stats(Characters.player.name, Characters.boss.name), reply_markup=keyboard)
       bot.register_next_step_handler(msg, victory_check)
 
-   elif message.text == Characters.char.skill_name:
+   elif message.text == Characters.player.skill_name:
       # применение способности, если игрок нажал "Скилл"
-      Fight.char_skill_use()
+      Fight.player_skill_use()
 
       # отсылка сообщения
       bot.send_message(message.from_user.id, Fight.Attack_messages.skill_use_message)
@@ -179,17 +180,17 @@ def action_choice(message):
       # переход на проверку победы в бою
       victory_check(message)
 
-   elif message.text == Characters.char.item:
+   elif message.text == Characters.player.item:
       # применение предмета, если игрок нажал "Предмет"
-      Fight.char_item_use()
+      Fight.player_item_use()
 
       # отсылка сообщения 
       bot.send_message(message.from_user.id, Fight.Attack_messages.item_use_message)
 
       # особое сообщение, если предмет влияет на конкретного игрока
-      if Drop.Item.char_iteraction_message != False:
-         bot.send_message(message.from_user.id, Drop.Item.char_iteraction_message)
-         Drop.Item.char_iteraction_message = False
+      if Drop.Item.player_iteraction_message != False:
+         bot.send_message(message.from_user.id, Drop.Item.player_iteraction_message)
+         Drop.Item.player_iteraction_message = False
 
       # особое сообщение, если предмет влияент на конкретного босса
       if Drop.Item.boss_iteraction_message != False:
@@ -202,22 +203,22 @@ def action_choice(message):
 def victory_check(message):
    # проверка на победу в конце раунда
 
-   if Characters.boss.health > 0 and Characters.char.health > 0:
+   if Characters.boss.health > 0 and Characters.player.health > 0:
       # если и босс и игрок живы - переход к следующему раунду
       start_fight(message)
 
-   elif Characters.boss.health <= 0 and Characters.char.health > 0 and Characters.boss.name == MyStrings.Text.makar_name.value:
+   elif Characters.boss.health <= 0 and Characters.player.health > 0 and Characters.boss.name == MyStrings.Text.makar_name.value:
       # если игрок победил финального босса Короля Макара - поздравительное сообщение, клавиатура с подтверждением перезапуска игры
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
       keyboard.add(MyStrings.Text.restart_button_text.value)
       msg = bot.send_message(message.from_user.id, text = MyStrings.Text.victory_game_text.value, reply_markup=keyboard)
-      bot.register_next_step_handler(msg, get_character)
+      bot.register_next_step_handler(msg, choose_hero)
 
-   elif Characters.boss.health <= 0 and Characters.char.health > 0 and Characters.boss.name != MyStrings.Text.makar_name.value:
+   elif Characters.boss.health <= 0 and Characters.player.health > 0 and Characters.boss.name != MyStrings.Text.makar_name.value:
       # если игрок победил обычного босса - переход на следующий уровень
       next_fight(message)
 
-   elif Characters.char.health <= 0: 
+   elif Characters.player.health <= 0: 
       # если игрок проиграл, вывод сообщения
       bot.send_message(message.from_user.id, MyStrings.Text.game_over_text.value)
 

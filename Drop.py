@@ -21,7 +21,7 @@ class Buff():
 
 class Item():
    boss_iteraction_message = False
-   char_iteraction_message = False
+   player_iteraction_message = False
    def __init__(self, value, description):
       self.value = value
       self.description = description
@@ -33,12 +33,12 @@ def shop_enter(x):
    buff_choice = [random.choice(Loot.buff_list), random.choice(Loot.buff_list), random.choice(Loot.buff_list)]
    item_choice = [random.choice(Loot.item_list), random.choice(Loot.item_list), random.choice(Loot.item_list)]
    if x == MyStrings.Text.stas_shop_name.value:
-      Characters.char.damage_up(50)
+      Characters.player.damage_up(50)
    elif x == MyStrings.Text.bratishki_shop_name.value:
-      Characters.char.health_up(200)
+      Characters.player.health_up(200)
 
 def stas_enter(x):
-   Characters.char.item = x
+   Characters.player.item = x
    Loot.item_list.remove(x)
 
 def bratishki_enter(x):
@@ -47,77 +47,77 @@ def bratishki_enter(x):
    
    if x == MyStrings.Text.sochnik_name.value:
       buff = Buff(20, 0, 0, 0, 0, MyStrings.Text.sochnik_description.value)
-      Characters.Char.health_up_procent(Characters.char, buff.health)
+      Characters.Player.health_up_procent(Characters.player, buff.health)
    
    elif x == MyStrings.Text.dubai_name.value:
       buff = Buff(30, 0, 0, 0, 0, MyStrings.Text.dubai_description.value)
-      Characters.Char.health_up_procent(Characters.char, buff.health)
+      Characters.Player.health_up_procent(Characters.player, buff.health)
 
    elif x == MyStrings.Text.dron_meat_name.value:
       buff = Buff(40, 0, 0, 0, 0, MyStrings.Text.dron_meat_description.value)
-      Characters.Char.health_up_procent(Characters.char, buff.health)
+      Characters.Player.health_up_procent(Characters.player, buff.health)
 
    elif x == MyStrings.Text.pizza5_name.value:
       buff = Buff(50, 0, 0, 0, 0, MyStrings.Text.pizza5_description.value)
-      Characters.Char.health_up_procent(Characters.char, buff.health)
+      Characters.Player.health_up_procent(Characters.player, buff.health)
 
    elif x == MyStrings.Text.guitar_name.value:
       buff = Buff(0, 15, 0, 0, 0, MyStrings.Text.guitar__description.value)
-      Characters.Char.damage_up_procent(Characters.char, buff.damage)
+      Characters.Player.damage_up_procent(Characters.player, buff.damage)
 
    elif x == MyStrings.Text.bashkerme_name.value:
       buff = Buff(0, 25, 0, 0, 0, MyStrings.Text.bashkerme_description.value)
-      Characters.Char.damage_up_procent(Characters.char, buff.damage)
+      Characters.Player.damage_up_procent(Characters.player, buff.damage)
 
    elif x == MyStrings.Text.pika_name.value:
       buff = Buff(0, 30, 0, 0, 0, MyStrings.Text.pika_description.value)
-      Characters.Char.damage_up_procent(Characters.char, buff.damage)
+      Characters.Player.damage_up_procent(Characters.player, buff.damage)
 
    elif x == MyStrings.Text.dildo_name.value:
       buff = Buff(0, 50, 0, 0, 0, MyStrings.Text.dildo_description.value)
-      Characters.Char.damage_up_procent(Characters.char, buff.damage)
+      Characters.Player.damage_up_procent(Characters.player, buff.damage)
    
    elif x == MyStrings.Text.everlast_name.value:
       buff = Buff(10, 10, 0, 0, 0, MyStrings.Text.everlast_description.value)
-      Characters.Char.health_up_procent(Characters.char, buff.health)
-      Characters.Char.damage_up_procent(Characters.char, buff.damage)
+      Characters.Player.health_up_procent(Characters.player, buff.health)
+      Characters.Player.damage_up_procent(Characters.player, buff.damage)
 
    elif x == MyStrings.Text.marki_name.value:
       buff = Buff(20, 20, 0, 0, 0, MyStrings.Text.marki_description.value)
-      Characters.Char.health_up_procent(Characters.char, buff.health)
-      Characters.Char.damage_up_procent(Characters.char, buff.damage)
+      Characters.Player.health_up_procent(Characters.player, buff.health)
+      Characters.Player.damage_up_procent(Characters.player, buff.damage)
 
    elif x == MyStrings.Text.limon_name.value:
       buff = Buff(30, 50, 5, 0, 0, MyStrings.Text.limon_description.value)
-      Characters.Char.health_down_procent(Characters.char, buff.health)
-      Characters.Char.damage_up_procent(Characters.char, buff.damage)
-      Characters.Char.critical_chance_up(Characters.char, buff.critical_chance)
+      Characters.Player.health_down_procent(Characters.player, buff.health)
+      Characters.Player.damage_up_procent(Characters.player, buff.damage)
+      Characters.Player.critical_chance_up(Characters.player, buff.critical_chance)
 
    elif x == MyStrings.Text.chess_name.value:
       buff = Buff(0, 0, 5, 0, 0, MyStrings.Text.chess_description.value)
-      Characters.Char.critical_chance_up(Characters.char, buff.critical_chance)
+      Characters.Player.critical_chance_up(Characters.player, buff.critical_chance)
    
    elif x == MyStrings.Text.vargan_name.value:
       buff = Buff(0, 0, 10, 0, 0, MyStrings.Text.vargan_description.value)
-      Characters.Char.critical_chance_up(Characters.char, buff.critical_chance)
+      Characters.Player.critical_chance_up(Characters.player, buff.critical_chance)
 
    elif x == MyStrings.Text.choops_name.value:
       buff = Buff(0, 0, 0, 0, 10, MyStrings.Text.choops_description.value)
-      Characters.Char.lifesteal_up(Characters.char, buff.lifesteal)
+      Characters.Player.lifesteal_up(Characters.player, buff.lifesteal)
 
    elif x == MyStrings.Text.shiva_bless_name.value:
       buff = Buff(0, 50, 15, 0, 0, MyStrings.Text.shiva_bless_description.value)
-      Characters.Char.damage_up_procent(Characters.char, buff.damage)
-      Characters.Char.critical_chance_up(Characters.char, buff.critical_chance)
+      Characters.Player.damage_up_procent(Characters.player, buff.damage)
+      Characters.Player.critical_chance_up(Characters.player, buff.critical_chance)
 
    elif x == MyStrings.Text.makar_bless_name.value:
       buff = Buff(30, 30, 10, 0, 0, MyStrings.Text.makar_bless_description.value)
-      Characters.Char.health_up_procent(Characters.char, buff.health)
-      Characters.Char.damage_up_procent(Characters.char, buff.damage)
-      Characters.Char.critical_chance_up(Characters.char, buff.critical_chance)
+      Characters.Player.health_up_procent(Characters.player, buff.health)
+      Characters.Player.damage_up_procent(Characters.player, buff.damage)
+      Characters.Player.critical_chance_up(Characters.player, buff.critical_chance)
 
-   if x not in Characters.char.all_items:
-      Characters.char.all_items.append(x)
+   if x not in Characters.player.all_items:
+      Characters.player.all_items.append(x)
 
 def item_activation(item_name):
    global item
@@ -128,7 +128,7 @@ def item_activation(item_name):
          item.boss_iteraction_message = MyStrings.Text.doner_booze_text.value
          Characters.boss.health_up(item.value)
       else:
-         Characters.char.health_up(item.value)
+         Characters.player.health_up(item.value)
 
    elif item_name == MyStrings.Text.sidr_name.value:
       item = Item(300, MyStrings.Text.sidr_description.value)
@@ -136,7 +136,7 @@ def item_activation(item_name):
          item.boss_iteraction_message = MyStrings.Text.doner_booze_text.value
          Characters.boss.health_up(item.value)
       else:
-         Characters.char.health_up(item.value)
+         Characters.player.health_up(item.value)
 
    elif item_name == MyStrings.Text.bagbeer_name.value:
       item = Item(500, MyStrings.Text.bagbeer_description.value)
@@ -144,11 +144,11 @@ def item_activation(item_name):
          item.boss_iteraction_message = MyStrings.Text.doner_booze_text.value
          Characters.boss.health_up(item.value)
       else:
-         Characters.char.health_up(item.value)
+         Characters.player.health_up(item.value)
 
    elif item_name == MyStrings.Text.mineralka_name.value:
       item - Item(100, MyStrings.Text.mineralka_description.value)
-      Characters.char.regeneration_up(item.value)
+      Characters.player.regeneration_up(item.value)
 
    elif item_name == MyStrings.Text.lezvie_name.value:
       item = Item(150, MyStrings.Text.lezvie_description.value)
@@ -158,8 +158,8 @@ def item_activation(item_name):
    elif item_name == MyStrings.Text.travmat_name.value:
       item = Item(300, MyStrings.Text.travmat_description.value)
       if Characters.boss.name == MyStrings.Text.viv_name.value:
-         Characters.char.health_down(item.value)
-         Characters.char.bleeding = True
+         Characters.player.health_down(item.value)
+         Characters.player.bleeding = True
          item.boss_iteraction_message = MyStrings.Text.viv_travmat_text.value
       else:
          Characters.boss.health_down(item.value)
@@ -168,7 +168,7 @@ def item_activation(item_name):
    elif item_name == MyStrings.Text.cola_name.value:
       item = Item(500, MyStrings.Text.cola_description.value)
       if Characters.boss.name == MyStrings.Text.doner_name.value:
-         Characters.char.health_down(item.value)
+         Characters.player.health_down(item.value)
          Characters.boss.health_down(item.value)
          item.boss_iteraction_message = MyStrings.Text.doner_cola_text.value
       else:
@@ -203,24 +203,24 @@ def item_activation(item_name):
 
    elif item_name == MyStrings.Text.rolex_name.value:
       item = Item(0, MyStrings.Text.rolex_description.value)
-      Characters.char.cooldown = item.value
+      Characters.player.cooldown = item.value
 
    elif item_name == MyStrings.Text.vaccine_name.value:
       item = Item(0, MyStrings.Text.vaccine_description.value)
-      Characters.char.poison = False
-      Characters.char.bleeding = False
+      Characters.player.poison = False
+      Characters.player.bleeding = False
 
    elif item_name == MyStrings.Text.shiga_name.value:
       item = Item(30, False)
       foods = MyStrings.Text.sochnik_name.value, MyStrings.Text.dubai_name.value, MyStrings.Text.dron_meat_name.value, MyStrings.Text.pizza5_name.value
-      cross_check = [x for x in foods if x in Characters.char.all_items]
+      cross_check = [x for x in foods if x in Characters.player.all_items]
       if len(cross_check) == 0:
-         Characters.char.health_down_procent(item.value)
-         Characters.char.damage_up_procent(item.value)
+         Characters.player.health_down_procent(item.value)
+         Characters.player.damage_up_procent(item.value)
          item.description = MyStrings.Text.shiga_debuff_description.value
       elif len(cross_check) > 0:
-         Characters.char.health_up_procent(item.value)
-         Characters.char.damage_up_procent(item.value)
+         Characters.player.health_up_procent(item.value)
+         Characters.player.damage_up_procent(item.value)
          item.description = MyStrings.Text.shiga_buff_description.value
 
    elif item_name == MyStrings.Text.madam_name.value:
