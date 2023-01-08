@@ -6,49 +6,61 @@ import random
 import Characters
 import Drop
 import Locations
-import MyStrings
+import GameStrings
+import PlayerStrings
 import BotMessages
 import Fight
+import CharactersGenerator
 bot = TeleBot('2102427745:AAECFy-T6GfMWH1VNshsucAEXZEfzmGUZBk')
 
 @bot.message_handler(content_types=['text'])
 
+
 def choose_hero(message):
    # приветственное сообщение
-   bot.send_message(message.from_user.id, MyStrings.Text.hello_text.value)
+   bot.send_message(message.from_user.id, GameStrings.Text.hello)
    
-   # клавиатура с кнопками выбора героев
+   # клавиатура с именами героев
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-   keyboard.add(MyStrings.Text.mitya_name.value, MyStrings.Text.sanya_name.value, MyStrings.Text.toshik_name.value,
-                MyStrings.Text.kolya_name.value, MyStrings.Text.temich_name.value)
-   msg = bot.send_message(message.from_user.id, text = MyStrings.Text.choose_hero_text.value, reply_markup=keyboard)
+   keyboard.add(PlayerStrings.Mitya.name, PlayerStrings.Sanya.name, PlayerStrings.Toshik.name,
+                PlayerStrings.Kolya.name, PlayerStrings.Temich.name)
+
+   # сообщение с запросом на героя, переход к созданию игрока
+   msg = bot.send_message(message.from_user.id, text = GameStrings.Text.choose_hero, reply_markup=keyboard)
    bot.register_next_step_handler(msg, player_creation)
+
 
 def player_creation(message):
    # назначение характеристик выбранному герою
-   Characters.player_get_stats(message.text)
+   CharactersGenerator.player_get_stats(message.text)
 
    # сообщение с характеристиками героя
-   bot.send_message(message.from_user.id, BotMessages.Message_text.hero_description_message())
+   bot.send_message(message.from_user.id, PlayerStrings.Text.hero_description)
 
-   # клавиатура с подтверждением выбора героя
+   # клавиатура с подтверждением героя или его заменой
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-   keyboard.add(MyStrings.Text.ready_button_text.value, MyStrings.Text.another_hero_button_text.value)
-   msg = bot.send_message(message.from_user.id, text = MyStrings.Text.player_confirmed_question.value, reply_markup=keyboard)
+   keyboard.add(GameStrings.ButtonText.ready, GameStrings.ButtonText.another_hero)
+
+   # сообщение с потдверждением героя или его заменой, переход к выбору магазина
+   msg = bot.send_message(message.from_user.id, text = GameStrings.Text.hero_confirmed_question, reply_markup=keyboard)
    bot.register_next_step_handler(msg, shop_choice)
+
 
 def shop_choice(message):
    # перезапуск если герой не подтвержден игроком
-   if message.text == MyStrings.Text.another_hero_button_text.value:
-      bot.send_message(message.from_user.id, MyStrings.Text.give_answer_text.value)
+   if message.text == GameStrings.ButtonText.another_hero:
+      bot.send_message(message.from_user.id, GameStrings.Text.user_input)
       bot.register_next_step_handler(message, choose_hero)
    
-   # клавиатура с выбором магазина при подтверждении героя или победе в бою
-   elif message.text == MyStrings.Text.ready_button_text.value or MyStrings.Text.victory_button_text.value:
+   # клавиатура с именами магазинов при подтверждении героя или победе в бою
+   elif message.text == GameStrings.ButtonText.ready or GameStrings.ButtonText.victory:
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-      keyboard.add(MyStrings.Text.stas_shop_name.value, MyStrings.Text.bratishki_shop_name.value)
-      msg = bot.send_message(message.from_user.id, text = MyStrings.Text.shop_choice_text.value, reply_markup=keyboard)
+      keyboard.add(GameStrings.Text.stas_shop_name, GameStrings.Text.bratishki_shop_name)
+
+      # сообщение с выбором магазина
+      msg = bot.send_message(message.from_user.id, text = GameStrings.Text.shop_choice, reply_markup=keyboard)
       bot.register_next_step_handler(msg, shop)
+
 
 def shop(message):
    # применение свойств магазина на игрока
@@ -122,6 +134,7 @@ def location(message):
 
    # описание локации и дополнительного взаимодействия с ней персонажей
    bot.send_message(message.from_user.id, BotMessages.Message_text.location_description_message())
+
    if Locations.Location.pers_iteraction_message != False:
       bot.send_message(message.from_user.id, Locations.Location.pers_iteraction_message)
       Locations.Location.pers_iteraction_message = False
