@@ -1,3 +1,13 @@
+
+import CharactersGenerator
+import DropStrings
+
+def stas_enter(item_name):
+   # если игрок выбрал магазин Серого Стаса, итем добавляется в список итемов игрока
+   # и удаляется из общего списка итемов, предотвращая повторение во время игры
+   CharactersGenerator.player.item = item_name
+   DropStrings.Items.item_list.remove(item_name)
+
 def item_activation(item_name):
    global item
 

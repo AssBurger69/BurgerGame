@@ -3,6 +3,9 @@ import GameStrings
 import BuffsGenerator
 
 class Buffs():
+
+   bratishki_buff_offer = 'Для тебя ничего не жалко! Угощайся'
+   bratishki_bye = 'Заходи еще, всегда тебе рады!'
    
    def bratishki_hello():
       return '{0}\n+{1}{2}'.format('Сядь браток, попей улун молочный, он тебя подъюлит', 
@@ -14,35 +17,86 @@ class Buffs():
                                     BuffsGenerator.buff.health, GameStrings.Icons.player_health)
 
    dubai_name = 'Дубайский шаурмец'
-   dubai_description = 'Неизменная классика\n+30%❤️'
+   def dubai_description():
+      return '{0}\n+{1}%{2}'.format('Неизменная классика', 
+                                    BuffsGenerator.buff.health, GameStrings.Icons.player_health)
+      
    dron_meat_name = 'Мясо Андрея'
-   dron_meat_description = 'Держи его по-дальше от Дрона\n+40%❤️'
+   def dron_meat_description():
+      return '{0}\n+{1}%{2}'.format('Держи его по-дальше от Дрона', 
+                                    BuffsGenerator.buff.health, GameStrings.Icons.player_health)
+      
    pizza5_name = '5 пицц'
-   pizza5_description = 'Промкод на 5 пицц со скидкой 50%\n+50%❤️'
+   def pizza5_description():
+      return '{0}\n+{1}%{2}'.format('Промкод на 5 пицц со скидкой 50%', 
+                                    BuffsGenerator.buff.health, GameStrings.Icons.player_health)
+      
    guitar_name = 'Гитара'
-   guitar__description = 'Теперь ты - Рокер\n+15%⚔️'
+   def guitar__description():
+      return '{0}\n+{1}%{2}'.format('Теперь ты - Рокер', 
+                                    BuffsGenerator.buff.damage, GameStrings.Icons.damage)
+      
    bashkerme_name = 'Башкерме взрывай'
-   bashkerme_description = 'Баааашкермееее!\n+25%⚔️'
+   def bashkerme_description():
+      return '{0}\n+{1}%{2}'.format('Баааашкермееее!', 
+                                    BuffsGenerator.buff.damage, GameStrings.Icons.damage)
+      
    pika_name = 'Пика точеная'
-   pika_description = 'Ну хоть не хуй дроченый\n+30%⚔️'
+   def pika_description():
+      return '{0}\n+{1}%{2}'.format('Ну хоть не хуй дроченый', 
+                                    BuffsGenerator.buff.damage, GameStrings.Icons.damage)
+      
    dildo_name = 'Огромный дилдак'
-   dildo_description = 'В умелых руках дает\n+50%⚔️'
+   def dildo_description():
+      return '{0}\n+{1}%{2}'.format('В умелых руках дает', 
+                                    BuffsGenerator.buff.damage, GameStrings.Icons.damage)
+      
    everlast_name = 'Костюм Эверласт'
-   everlast_description = 'Костюм Дани Эверласта, легенды миксфайта!\n+10%❤️\n+10%⚔️'
+   def everlast_description():
+      return '{0}\n+{1}%{2}\n+{3}%{4}'.format('Костюм Дани Эверласта, легенды миксфайта!', 
+                                             BuffsGenerator.buff.health, GameStrings.Icons.player_health,
+                                             BuffsGenerator.buff.damage, GameStrings.Icons.damage)
+      
    marki_name = 'Почтовые марки'
-   marki_description = 'Ты смог уломать ребят на почтовые отправления!\n+20%❤️\n+20%⚔️'
+   def marki_description():
+      return '{0}\n+{1}%{2}\n+{3}%{4}'.format('Ты смог уломать ребят на почтовые отправления!', 
+                                             BuffsGenerator.buff.health, GameStrings.Icons.player_health,
+                                             BuffsGenerator.buff.damage, GameStrings.Icons.damage)
+      
    limon_name = 'Лимонная голодовочка'
-   limon_description = '24-часовая голодовка с братишками!\n-30%❤️\n+50%⚔️\n+5%💥'
+   def limon_description():
+      return '{0}\n-{1}%{2}\n+{3}%{4}\n+{5}%{6}'.format('24-часовая голодовка с братишками!', 
+                                                      BuffsGenerator.buff.health, GameStrings.Icons.player_health,
+                                                      BuffsGenerator.buff.damage, GameStrings.Icons.damage,
+                                                      BuffsGenerator.buff.critical_chance, GameStrings.Icons.critical_chance)
+      
    chess_name = 'Сыграть в шахматы'
-   chess_description = 'Не важно проиграл ты или да\n+5%💥'
+   def chess_description():
+      return '{0}\n+{1}%{2}'.format('Не важно проиграл ты или да', 
+                                    BuffsGenerator.buff.critical_chance, GameStrings.Icons.critical_chance)
+      
    vargan_name = 'Поиграть на варгане'
-   vargan_description = 'Хорошая работа ртом и языком, дружище\n+10%💥'
+   def vargan_description():
+      return '{0}\n+{1}%{2}'.format('Хорошая работа ртом и языком, дружище', 
+                                    BuffsGenerator.buff.critical_chance, GameStrings.Icons.critical_chance)
+
    choops_name = 'Черный чупа чупс'
-   choops_description = 'Навык отсоса повышен!\n+10%🦇'
+   def choops_description():
+      return '{0}\n+{1}%{2}'.format('Навык отсоса повышен!', 
+                                    BuffsGenerator.buff.lifesteal, GameStrings.Icons.lifesteal)
+
    shiva_bless_name = 'Благословение Шивы'
-   shiva_bless_description = 'Великая Шива благоволит тебе воин!\n+50%⚔️\n+15%💥'
+   def shiva_bless_description():
+      return '{0}\n+{1}%{2}\n+{3}%{4}'.format('Великая Шива благоволит тебе воин!', 
+                                             BuffsGenerator.buff.damage, GameStrings.Icons.damage,
+                                             BuffsGenerator.buff.critical_chance, GameStrings.Icons.critical_chance)
+
    makar_bless_name = 'Благословение Макара'
-   makar_bless_description = 'Святейший Король Макар снизошел на тебя!\n+30%❤️\n+30%⚔️\n+5%💥'
+   def makar_bless_description():
+      return '{0}\n+{1}%{2}\n+{3}%{4}\n+{5}%{6}'.format('Святейший Король Макар снизошел на тебя!', 
+                                                      BuffsGenerator.buff.health, GameStrings.Icons.player_health,
+                                                      BuffsGenerator.buff.damage, GameStrings.Icons.damage,
+                                                      BuffsGenerator.buff.critical_chance, GameStrings.Icons.critical_chance)
 
    buff_list = [sochnik_name, dubai_name, dron_meat_name, pizza5_name, guitar_name, bashkerme_name, pika_name,
                dildo_name, everlast_name, marki_name, limon_name, chess_name, shiva_bless_name, makar_bless_name,
@@ -51,7 +105,13 @@ class Buffs():
 
 
 class Items():
-   stas_shop_description = 'Стас тебя угостил чем-то мощным, чувствуешь себя сильнее! Давай глянем что он там еще наворовал\n+50⚔️'
+
+   stas_item_offer = 'Забирку делай быстрей, мразь'
+   stas_bye = 'Купки! Купки!'
+
+   def stas_hello():
+      return '{0}\n+{1}{2}'.format('Здорова батя, будешь нет эту хуйню? На держи', 
+                                    Drop.Item.stas_damage_up_value, GameStrings.Icons.damage)
 
    zhiguli_name = 'Жигули'
    zhiguli_description = 'Для истинных ценителей\n+150❤️'

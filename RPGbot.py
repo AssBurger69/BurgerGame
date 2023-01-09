@@ -8,9 +8,14 @@ import Drop
 import Locations
 import GameStrings
 import PlayerStrings
+import DropStrings
+import StatsStrings
 import BotMessages
-import Fight
+import FightProcess
+import FightFunctions
 import CharactersGenerator
+import ItemsGenerator
+import BuffsGenerator
 bot = TeleBot('2102427745:AAECFy-T6GfMWH1VNshsucAEXZEfzmGUZBk')
 
 @bot.message_handler(content_types=['text'])
@@ -26,7 +31,8 @@ def choose_hero(message):
                 PlayerStrings.Kolya.name, PlayerStrings.Temich.name)
 
    # сообщение с запросом на героя, переход к созданию игрока
-   msg = bot.send_message(message.from_user.id, text = GameStrings.Text.choose_hero, reply_markup=keyboard)
+   msg = bot.send_message(message.from_user.id, text = GameStrings.Text.choose_hero, 
+                           reply_markup=keyboard)
    bot.register_next_step_handler(msg, player_creation)
 
 
@@ -42,7 +48,8 @@ def player_creation(message):
    keyboard.add(GameStrings.ButtonText.ready, GameStrings.ButtonText.another_hero)
 
    # сообщение с потдверждением героя или его заменой, переход к выбору магазина
-   msg = bot.send_message(message.from_user.id, text = GameStrings.Text.hero_confirmed_question, reply_markup=keyboard)
+   msg = bot.send_message(message.from_user.id, text = GameStrings.Text.hero_confirmed_question, 
+                           reply_markup=keyboard)
    bot.register_next_step_handler(msg, shop_choice)
 
 
@@ -57,59 +64,88 @@ def shop_choice(message):
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
       keyboard.add(GameStrings.Text.stas_shop_name, GameStrings.Text.bratishki_shop_name)
 
-      # сообщение с выбором магазина
-      msg = bot.send_message(message.from_user.id, text = GameStrings.Text.shop_choice, reply_markup=keyboard)
+      # сообщение с выбором магазина, переход к выбранному магазину
+      msg = bot.send_message(message.from_user.id, text = GameStrings.Text.shop_choice, 
+                              reply_markup=keyboard)
       bot.register_next_step_handler(msg, shop)
 
 
 def shop(message):
-   # применение свойств магазина на игрока
+   # применение свойств магазина при входе игрока
    Drop.shop_enter(message.text)
 
-   # приветственное сообщение магазина и клавиатура с предлагаемыми предметами
-   if message.text == MyStrings.Text.stas_shop_name.value:
-      bot.send_message(message.from_user.id, MyStrings.Text.stas_shop_description.value)
+   # если игрок пошел в Лавку Серого Стаса
+   if message.text == GameStrings.ButtonText.stas_shop_name:
+
+      # реплика Стаса с приветствием
+      bot.send_message(message.from_user.id, DropStrings.Items.stas_hello())
+
+      # клавиатура с тремя рандомными итемами 
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
       keyboard.add(Drop.item_choice[0], Drop.item_choice[1], Drop.item_choice[2])
-      msg = bot.send_message(message.from_user.id, text = MyStrings.Text.item_choice_text.value, reply_markup=keyboard)
+
+      # реплика Стаса перед выбором итемов, переход к обновлению слота итема игрока
+      msg = bot.send_message(message.from_user.id, text = DropStrings.Items.stas_item_offer, 
+                              reply_markup=keyboard)
       bot.register_next_step_handler(msg, items_upgrade)
 
-   elif message.text == MyStrings.Text.bratishki_shop_name.value:
-      bot.send_message(message.from_user.id, MyStrings.Text.bratishki_shop_description.value)
+   # если игрок пошел в Братишкино логово
+   elif message.text == GameStrings.ButtonText.bratishki_shop_name:
+
+      # реплика Братишек с приветствием 
+      bot.send_message(message.from_user.id, DropStrings.Buffs.bratishki_hello())
+
+      # клавиатура с тремя рандомными баффами
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
       keyboard.add(Drop.buff_choice[0], Drop.buff_choice[1], Drop.buff_choice[2])
-      msg = bot.send_message(message.from_user.id, text = MyStrings.Text.item_choice_text.value, reply_markup=keyboard)
+
+      # реплика Братишек перед выбором баффов, переход к применению их свойств на игрока 
+      msg = bot.send_message(message.from_user.id, text = DropStrings.Buffs.bratishki_buff_offer,
+                               reply_markup=keyboard)
       bot.register_next_step_handler(msg, stats_upgrade)
+
 
 def items_upgrade(message):
    # обновление слота предмета игрока если он пошел к Стасу
-   Drop.stas_enter(message.text)
+   ItemsGenerator.stas_enter(message.text)
    
-   # клавитура с запросом босса
+   # клавитура с запросом на подбор босса
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-   keyboard.add(MyStrings.Text.boss_choice_question.value)
-   msg = bot.send_message(message.from_user.id, text = MyStrings.Text.stas_bye_text.value, reply_markup=keyboard)
+   keyboard.add(GameStrings.Text.boss_choice_question)
+
+   # реплика Стаса с прощанием, переход к подбору босса
+   msg = bot.send_message(message.from_user.id, text = DropStrings.Items.stas_bye,
+                           reply_markup=keyboard)
    bot.register_next_step_handler(msg, boss_choice)
 
-def stats_upgrade(message):
-   # обновление статов игрока от выбранного предмета если он пошел к Братишкам
-   Drop.bratishki_enter(message.text)
 
-   # сообщение с описанием предмета
-   bot.send_message(message.from_user.id, Drop.buff.description)
+def stats_upgrade(message):
+   # обновление характеристик игрока если он пошел к Братишкам
+   BuffsGenerator.bratishki_enter(message.text)
+
+   # сообщение с описанием выбранного баффа
+   bot.send_message(message.from_user.id, BuffsGenerator.buff.description)
 
    # клавитура с выводом характеристик игрока и запросом босса
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-   keyboard.add(MyStrings.Text.boss_choice_question.value)
-   msg = bot.send_message(message.from_user.id, text = BotMessages.Message_text.player_stats_message(), reply_markup=keyboard)
+   keyboard.add(GameStrings.Text.boss_choice_question)
+
+   # реплика Братишек с прощанием
+   msg = bot.send_message(message.from_user.id, text = DropStrings.Buffs.bratishki_bye,
+                           reply_markup=keyboard)
+
+   # сообщение с характеристиками персонажа                           
+   bot.send_message(message.from_user_id, StatsStrings.player_stats_message())
+
+   # переход к подбору босса                           
    bot.register_next_step_handler(msg, boss_choice)
 
 def boss_choice(message):
-   # выбор уровня сложности босса в зависимости от количества побед
-   Characters.boss_difficult_choice(Characters.Player.win_rate)
+   # выбор босса в зависимости от количества побед в боях
+   FightFunctions.boss_difficult_choice(Characters.Player.win_rate)
 
    # назначение характеристик боссу
-   Characters.boss_get_stats(Characters.boss_name)
+   CharactersGenerator.boss_get_stats(FightFunctions.boss_name)
 
    # проверка в розыске ли игрок, приминение свйоств если да
    if Characters.player.wanted_level == True:
