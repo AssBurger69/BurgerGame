@@ -64,3 +64,44 @@ def boss_prelude_skill_activation(boss_name):
    elif boss_name == MyStrings.Text.black_stas_name.value and player.name == MyStrings.Text.mitya_name.value:
       boss.damage_up(player.mitya_elexir_count * 200)
       prelude_skill_message = MyStrings.Text.black_stas_mitya_text.value
+
+def chance(x):
+   # генератор вероятности
+   chance = random.randint(1, 100) in range(1, x)
+   return chance
+
+def bleeding():
+   # проверка игрока на кровотечение и отсутствие иммунитета к нему, применение кровотечения, вывод сообщения
+   if Characters.player.bleeding == True and Characters.player.immunity == False:
+      Characters.player.health_down(Characters.Pers.bleeding_damage)
+      Attack_messages.attack_messages_list.append(BotMessages.Message_text.bleeding_message(Characters.player.icon, MyStrings.Text.player_health.value))
+      
+   # проверка босса на кровотечение, его применение и вывод сообщения
+   if Characters.boss.bleeding == True:
+      Characters.boss.health_down(Characters.Pers.bleeding_damage)
+      Attack_messages.attack_messages_list.append(BotMessages.Message_text.bleeding_message(Characters.boss.icon, MyStrings.Text.boss_health.value))
+
+def poison():
+   # проверка игрока на отравление и отсутствие иммунитета к нему, применение, вывод сообщения
+   if Characters.player.poison == True and Characters.player.immunity == False:
+      Characters.player.health_down_procent(Characters.Pers.poison_damage)
+      Attack_messages.attack_messages_list.append(BotMessages.Message_text.poison_message(Characters.player.icon, MyStrings.Text.player_health.value))
+
+   # проверка босса на отравление, применение, вывод сообщения
+   if Characters.boss.poison == True:
+      Characters.boss.health_down_procent(Characters.Pers.poison_damage)
+      Attack_messages.attack_messages_list.append(BotMessages.Message_text.poison_message(Characters.boss.icon, MyStrings.Text.boss_health.value))
+
+   # увеличение на 10% урона отравления на время боя
+   Characters.Pers.poison_damage += 10
+
+def regeneration():
+   # проверка игрока на регенерацию, применение, вывод сообщения
+   if Characters.player.regeneration > 0:
+      Characters.player.health_up(Characters.Pers.regeneration_value)
+      Attack_messages.attack_messages_list.append(BotMessages.Message_text.regeneration_message(Characters.player.icon, MyStrings.Text.player_health.value))
+
+   # проверка босса на регенерацию, применение, вывод сообщения   
+   if Characters.boss.regeneration > 0:
+      Characters.boss.health_up(Characters.Pers.regeneration_value)
+      Attack_messages.attack_messages_list.append(BotMessages.Message_text.regeneration_message(Characters.boss.icon, MyStrings.Text.boss_health.value))

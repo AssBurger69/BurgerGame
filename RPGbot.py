@@ -10,6 +10,7 @@ import GameStrings
 import PlayerStrings
 import DropStrings
 import StatsStrings
+import BossStrings
 import BotMessages
 import FightProcess
 import FightFunctions
@@ -148,21 +149,22 @@ def boss_choice(message):
    CharactersGenerator.boss_get_stats(FightFunctions.boss_name)
 
    # проверка в розыске ли игрок, приминение свйоств если да
-   if Characters.player.wanted_level == True:
-      Characters.boss.resurrection = True
+   if CharactersGenerator.player.wanted_level == True:
+      CharactersGenerator.boss.resurrection = True
       bot.send_message(message.from_user.id, MyStrings.Text.boss_police_upgrade_text.value)
 
-   # проверка является ли игрок Сашей Шлякиным при битве с Сашей Шлякиным, с перезапуском если да
-   if Characters.boss.name == MyStrings.Text.sasha_name.value and Characters.player.name != MyStrings.Text.sanya_name.value:
-      bot.send_message(message.from_user.id, MyStrings.Text.sasha_bye_text.value)
+   # проверка является ли игрок Сашей Шлякиным при битве с Сашей Шлякиным, с перезапуском если нет
+   if CharactersGenerator.boss.name == BossStrings.Sasha.name and CharactersGenerator.player.name != PlayerStrings.Sanya.name:
+      bot.send_message(message.from_user.id, BossStrings.Sasha.cancel_fight)
       boss_choice(message)
 
    # клавиатура с выводом характеристик босса и запросом локации
    else:
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-      keyboard.add(MyStrings.Text.location_choice_question.value)
-      msg = bot.send_message(message.from_user.id, text = BotMessages.Message_text.boss_stats_message(), reply_markup=keyboard)
+      keyboard.add(GameStrings.Text.location_choice_question)
+      msg = bot.send_message(message.from_user.id, text = StatsStrings.boss_stats_message(), reply_markup=keyboard)
       bot.register_next_step_handler(msg, location)
+
 
 def location(message):
    # случайный выбор локации и применение ее свойств
@@ -180,6 +182,7 @@ def location(message):
    keyboard.add(MyStrings.Text.get_fight_button_text.value)
    msg = bot.send_message(message.from_user.id, text = BotMessages.Message_text.player_stats_message(), reply_markup=keyboard)
    bot.register_next_step_handler(msg, start_fight)
+
 
 def start_fight(message):
    # применение способности босса перед боем, отсылка сообщения с ее описанием

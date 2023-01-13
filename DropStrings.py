@@ -1,6 +1,10 @@
+# модуль со всеми строками касательно магазинов и предметов
+
 import Drop
 import GameStrings
 import BuffsGenerator
+import ItemsGenerator
+import CharactersGenerator
 
 class Buffs():
 
@@ -68,7 +72,8 @@ class Buffs():
       return '{0}\n-{1}%{2}\n+{3}%{4}\n+{5}%{6}'.format('24-часовая голодовка с братишками!', 
                                                       BuffsGenerator.buff.health, GameStrings.Icons.player_health,
                                                       BuffsGenerator.buff.damage, GameStrings.Icons.damage,
-                                                      BuffsGenerator.buff.critical_chance, GameStrings.Icons.critical_chance)
+                                                      BuffsGenerator.buff.critical_chance, 
+                                                      GameStrings.Icons.critical_chance)
       
    chess_name = 'Сыграть в шахматы'
    def chess_description():
@@ -96,7 +101,8 @@ class Buffs():
       return '{0}\n+{1}%{2}\n+{3}%{4}\n+{5}%{6}'.format('Святейший Король Макар снизошел на тебя!', 
                                                       BuffsGenerator.buff.health, GameStrings.Icons.player_health,
                                                       BuffsGenerator.buff.damage, GameStrings.Icons.damage,
-                                                      BuffsGenerator.buff.critical_chance, GameStrings.Icons.critical_chance)
+                                                      BuffsGenerator.buff.critical_chance, 
+                                                      GameStrings.Icons.critical_chance)
 
    buff_list = [sochnik_name, dubai_name, dron_meat_name, pizza5_name, guitar_name, bashkerme_name, pika_name,
                dildo_name, everlast_name, marki_name, limon_name, chess_name, shiva_bless_name, makar_bless_name,
@@ -114,34 +120,99 @@ class Items():
                                     Drop.Item.stas_damage_up_value, GameStrings.Icons.damage)
 
    zhiguli_name = 'Жигули'
-   zhiguli_description = 'Для истинных ценителей\n+150❤️'
+   def zhiguli_description():
+      return '{0}\n+{1}{2}'.format('Для истинных ценителей',
+                                    ItemsGenerator.item.value, 
+                                    GameStrings.Icons.player_health)
+   
    sidr_name = 'Сидр'
-   sidr_description = 'Питерская эстетика\n+300❤️'
+   def sidr_description():
+      return '{0}\n+{1}{2}'.format('Питерская эстетика',
+                                    ItemsGenerator.item.value, 
+                                    GameStrings.Icons.player_health)
+   
    bagbeer_name = 'Балабаха Багбира'
-   bagbeer_description = 'Со вкусом молодости\n+500❤️'
+   def bagbeer_description():
+      return '{0}\n+{1}{2}'.format('Со вкусом молодости',
+                                    ItemsGenerator.item.value, 
+                                    GameStrings.Icons.player_health)
+   
    mineralka_name = 'Святая минералочка'
-   mineralka_description = 'Освежающий глоток придал тебе сил\n+100❤️💕'
+   def mineralka_description():
+      return '{0}\n+{1}{2}{3}'.format('Освежающий глоток придал тебе сил', 
+                                       ItemsGenerator.item.value, 
+                                       GameStrings.Icons.player_health, 
+                                       GameStrings.Icons.regeneration)
+   
    lezvie_name = 'Лезвия бритвы'
-   lezvie_description = 'Бросок в глаз! Враг травмирован\n-150🖤🩸'
+   def lezvie_description():
+      return '{0}\n-{1}{2}{3}'.format('Бросок в глаз! Враг травмирован', 
+                                       ItemsGenerator.item.value, 
+                                       GameStrings.Icons.boss_health, 
+                                       GameStrings.Icons.bleeding)
+   
    travmat_name = 'Травмат Володи'
-   travmat_description = 'Документы должны быть всегда с собой\n-300🖤🩸'
+   def travmat_description():
+      return '{0}\n-{1}{2}{3}'.format('Документы должны быть всегда с собой', 
+                                       ItemsGenerator.item.value, 
+                                       GameStrings.Icons.boss_health, 
+                                       GameStrings.Icons.bleeding)
+   
    cola_name = '2.5-литровка Колы'
-   cola_description = 'Грозное оружие судного нового года\n👿-500🖤'
+   def cola_description():
+      return '{0}\n{1}-{2}{3}'.format('Грозное оружие судного нового года',
+                                       GameStrings.Icons.boss,
+                                       ItemsGenerator.item.value,
+                                       GameStrings.Icons.boss_health)
+   
    sick_sock_name = 'Потный носок'
-   sick_sock_description = 'Противник поймал твой носок лицом\n-100🖤🦠'
+   def sick_sock_description():
+      return '{0}\n-{1}{2}{3}'.format('Противник поймал твой носок лицом',
+                                       ItemsGenerator.item.value,
+                                       GameStrings.Icons.boss_health,
+                                       GameStrings.Icons.poison)
+   
    harchok_name = 'Блевотный харчок'
-   harchok_description = 'Такого и врагу не пожелаешь\n-200🖤🦠'
+   def harchok_description():
+      return '{0}\n-{1}{2}{3}'.format('Такого и врагу не пожелаешь',
+                                       ItemsGenerator.item.value,
+                                       GameStrings.Icons.boss_health,
+                                       GameStrings.Icons.poison)
+   
    rampag_name = 'Рампаг'
-   rampag_description = 'Удар Рампагом! Враг в отрубе\n👿 + 💤'
+   def rampag_description():
+      return '{0}\n{1}+{2}'.format('Удар Рампагом! Враг в отрубе', 
+                                    CharactersGenerator.boss.icon, 
+                                    GameStrings.Icons.stan)
+
    rolex_name = 'Золотые Ролексы'
    rolex_description = 'Дороговаты, зато кулдаун скилла сбросили'
-   vaccine_name = 'Вакцина'
-   vaccine_description = 'Лечит от всех твоих недугов\n❌🩸🦠❌'
-   shiga_name = 'Шига'
-   shiga_debuff_description = 'Душисто залетела, но теперь ты голоден\n-20%❤️\n+20%⚔️'
-   shiga_buff_description = 'Душисто залетела, а еда спасла тебя от голода\n+20%❤️\n+20%⚔️'
-   madam_name = 'Мадам'
-   madam_description = 'Мадам умиротворяет всех вокруг тебя\n-50%⚔️'
 
-   item_list = ['Жигули', 'Лезвия бритвы', 'Потный носок', 'Шига', 'Святая минералочка', 'Золотые Ролексы', 'Сидр',
-                  '2.5-литровка Колы', 'Блевотный харчок', 'Мадам', 'Рампаг', 'Вакцина', 'Балабаха Багбира', 'Травмат Володи']
+   vaccine_name = 'Вакцина'
+   def vaccine_description():
+      return '{0}\n{1}{2}'.format('Лечит от всех твоих недугов', 
+                                 GameStrings.Icons.bleeding, 
+                                 GameStrings.Icons.poison)
+
+   shiga_name = 'Шига'
+   def shiga_bad_effect_description():
+      return '{0}\n-{1}%{2}\n+{3}%{4}'.format('Душисто залетела, но теперь ты голоден', 
+                                                ItemsGenerator.item.value, 
+                                                GameStrings.Icons.player_health, 
+                                                GameStrings.Icons.damage)
+   def shiga_good_effect_description():
+      return '{0}\n+{1}%{2}\n+{3}%{4}'.format('Душисто залетела, а еда спасла тебя от голода', 
+                                                ItemsGenerator.item.value, 
+                                                GameStrings.Icons.player_health, 
+                                                GameStrings.Icons.damage)                                
+
+   madam_name = 'Мадам'
+   def madam_description():
+      return '{0}\n-{1}%{2}'.format('Мадам умиротворяет всех вокруг тебя', 
+                                    ItemsGenerator.item.value, 
+                                    GameStrings.Icons.damage)
+
+   item_list = [zhiguli_name, sidr_name, bagbeer_name, mineralka_name, 
+               lezvie_name, travmat_name, cola_name, sick_sock_name, 
+               harchok_name, rampag_name, rolex_name, vaccine_name, 
+               shiga_name, madam_name]

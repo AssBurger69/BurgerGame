@@ -1,4 +1,5 @@
 # модуль со всеми параметрами, атрибутами и методами классов Персонаж, Игрок и Босс
+
 import GameStrings
 
 class Pers():
@@ -11,7 +12,8 @@ class Pers():
    regeneration_value = 100
 
    # создание класса персонажа с характеристиками общими для игрока и босса
-   def __init__(self, name, health, damage, critical_chance, miss_chance, lifesteal, regeneration, description):
+   def __init__(self, name, health, damage, critical_chance, 
+               miss_chance, lifesteal, regeneration, description):
       self.name = name
       self.health = health
       self.damage = damage
@@ -77,8 +79,10 @@ class Pers():
 class Player(Pers):
    # стандартное значение слота игрока - Пусто
    item = GameStrings.Text.empty_text
+
    # список, заполняющийся всеми предметами игрока по ходу игры
    all_items = []
+
    # стандартные параметры игрока
    stan_timer = 0
    cooldown = 0
@@ -88,6 +92,7 @@ class Player(Pers):
    bleeding = False
    silence = False
    immunity = False
+
    # параметры способностей героев
    mitya_health_down_skill_value = 100
    mitya_damage_up_skill_value = 200
@@ -95,6 +100,7 @@ class Player(Pers):
    toshik_passive_skill_procent = 5
    kolya_skill_procent = 50
    temich_skill_chance = 21
+
    # добавление дополнительных характеристик игрока - иконка и имя
    def __init__(self, name, health, damage, critical_chance, miss_chance, 
                   lifesteal, regeneration, description, skill_name, icon):
@@ -115,11 +121,7 @@ class Boss(Pers):
    bleeding = False
    poison = False
    icon = GameStrings.Icons.boss
-   # уникальные параметры при взаимодействии боссов и игрока
-   inkvisizia_mitya_health_up = 50
-   sanya_sasha_health_up = 20
-   sanya_sasha_damage_up = 20
-   sanya_sasha_critical_up = 10
+
    # параметры способностей боссов в конце раунда
    viv_end_skill_damage_up = 100
    kitty_end_skill_damage = 200
@@ -133,6 +135,7 @@ class Boss(Pers):
    glad_end_skill_damage_down = 250
    shiva_end_skill_critical_up = 20
    shiva_end_skill_damage_up = 100
+   
    # копирование в подкласс босса характеристик класса персонаж
    def __init__(self, name, health, damage, critical_chance, miss_chance, lifesteal,regeneration ,description):
       super().__init__(name, health, damage, critical_chance, miss_chance, lifesteal, regeneration, description)
