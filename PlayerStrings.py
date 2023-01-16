@@ -6,7 +6,7 @@ import Characters
 import Locations
 import InteractionParameters
 import GameStrings
-import FightProcess
+import FightCycle
 import CharactersGenerator
 
 class Mitya():
@@ -25,7 +25,8 @@ class Mitya():
    def description():
       return '{0}{1}\n{2}{3}\n{4}{5}\n{6}\n{7}'.format(GameStrings.Icons.player_health, 
                                                       CharactersGenerator.player.health,
-                                                      GameStrings.Icons.damage, CharactersGenerator.player.damage,
+                                                      GameStrings.Icons.damage, 
+                                                      CharactersGenerator.player.damage,
                                                       GameStrings.Icons.critical_chance, 
                                                       CharactersGenerator.player.critical_chance,
                                                       'Мастер отсоса жизни',
@@ -49,7 +50,7 @@ class Sanya():
 
    # сообщение способоности героя
    def skill_effect():
-      return '{0}-{1}{2}\n{3}{4}'.format(GameStrings.Icons.boss, FightProcess.sanya_skill_damage, 
+      return '{0}-{1}{2}\n{3}{4}'.format(GameStrings.Icons.boss, FightCycle.sanya_skill_damage, 
                                           GameStrings.Icons.boss_health, GameStrings.Icons.cooldown, 
                                           CharactersGenerator.player.cooldown)
 
@@ -120,7 +121,7 @@ class Kolya():
    # описание способности героя
    def skill_effect():
       return '{0}-{1}{2}\n{3}+{1}{2}\n{4}{5}'.format(CharactersGenerator.boss.icon, 
-                                                      FightProcess.kolya_hack_damage_value,
+                                                      FightCycle.kolya_hack_damage_value,
                                                       GameStrings.Icons.damage, 
                                                       CharactersGenerator.player.icon,
                                                       GameStrings.Icons.cooldown, 

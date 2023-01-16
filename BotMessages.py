@@ -1,36 +1,15 @@
 # -*- coding: utf-8 -*-
-import CharactersGenerator
-import GameStrings
-import PlayerStrings
-import Locations
-import Drop
-import Fight
 
 class Message_text():
    
       
-   def location_description_message():
-      return '{0}{1}\n{2}'.format(Locations.loc.name, Locations.loc.icon, Locations.loc.description)
+   
 
    def boss_item_iteraction_message(x):
       return '{0}\n{1}{2}{3}'.format(x, Characters.boss.icon, MyStrings.Text.plus.value, Drop.item.value)
 
-   def boss_skill_meter_message(boss_name):
-      if boss_name == MyStrings.Text.sledovatel_name.value:
-         return '{0}{1} {2}%{0}'.format(MyStrings.Text.chains.value, MyStrings.Text.sledovatel_skill_meter_text.value, Characters.player.police_level)
-      elif boss_name == MyStrings.Text.dron_name.value:
-         return '{0}{1} {2}%{0}'.format(MyStrings.Text.obida.value, MyStrings.Text.dron_skill_meter_text.value, Characters.boss.dron_obida_level)
 
-   def versus_stats(player_name, boss_name):
-      str1 = Characters.player.icon + player_name + ' 🆚 ' + boss_name + Characters.boss.icon
-      str2 = '❤️' + str(Characters.player.health)
-      str3 = '🖤' + str(Characters.boss.health)
-      str4 = '⚔️' + str(Characters.player.damage)
-      str5 = '⚔️' + str(Characters.boss.damage)
-      z = len(str2) - len(str3)
-      indent1 = ' ' * 8
-      indent2 = ' ' * (8 + z)
-      return '{0}\n{1}{2}{3}\n{4}{5}{6}'.format(str1, str2, indent1, str3, str4, indent2, str5)
+
 
    def miss_message(x):
       return '{0}{1}{2}%'.format(MyStrings.Text.miss_text.value, ' ' * 9, str(x))

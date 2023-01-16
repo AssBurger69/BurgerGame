@@ -7,13 +7,12 @@ class Pers():
    poison_damage = 10
    bleeding_damage = 100
    win_rate = 0
-   wanted_level = False
    ressurection_value = 800
    regeneration_value = 100
 
    # создание класса персонажа с характеристиками общими для игрока и босса
    def __init__(self, name, health, damage, critical_chance, 
-               miss_chance, lifesteal, regeneration, description):
+               miss_chance, lifesteal, regeneration):
       self.name = name
       self.health = health
       self.damage = damage
@@ -21,7 +20,6 @@ class Pers():
       self.miss_chance = miss_chance
       self.lifesteal = lifesteal
       self.regeneration = regeneration
-      self.description = description
 
    # функции изменения характеристик персонажей
    def health_down(self, value):
@@ -78,7 +76,7 @@ class Pers():
 
 class Player(Pers):
    # стандартное значение слота игрока - Пусто
-   item = GameStrings.Text.empty_text
+   item = GameStrings.Text.empty
 
    # список, заполняющийся всеми предметами игрока по ходу игры
    all_items = []
@@ -86,12 +84,13 @@ class Player(Pers):
    # стандартные параметры игрока
    stan_timer = 0
    cooldown = 0
-   police_level = 0
    mitya_elexir_count = 0
    poison = False
    bleeding = False
    silence = False
    immunity = False
+   police_wanted = False
+   description = False
 
    # параметры способностей героев
    mitya_health_down_skill_value = 100
@@ -103,9 +102,9 @@ class Player(Pers):
 
    # добавление дополнительных характеристик игрока - иконка и имя
    def __init__(self, name, health, damage, critical_chance, miss_chance, 
-                  lifesteal, regeneration, description, skill_name, icon):
+                  lifesteal, regeneration, skill_name, icon):
       super().__init__(name, health, damage, critical_chance, miss_chance, 
-                        lifesteal, regeneration, description)
+                        lifesteal, regeneration)
       self.skill_name = skill_name
       self.icon = icon
 
@@ -114,9 +113,7 @@ class Boss(Pers):
    end_skill_chance = 0
    returnal_value = 0
    stan_timer = 0
-   mel_blazer_level = 0
-   sledovatel_busted_level = 0
-   dron_obida_level = 0
+   skill_meter_level = 0
    resurrection = False
    bleeding = False
    poison = False
@@ -138,4 +135,5 @@ class Boss(Pers):
    
    # копирование в подкласс босса характеристик класса персонаж
    def __init__(self, name, health, damage, critical_chance, miss_chance, lifesteal,regeneration ,description):
-      super().__init__(name, health, damage, critical_chance, miss_chance, lifesteal, regeneration, description)
+      super().__init__(name, health, damage, critical_chance, miss_chance, lifesteal, regeneration)
+      self.description = description

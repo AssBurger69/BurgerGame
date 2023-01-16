@@ -1,6 +1,5 @@
 import Characters
 import random
-import BotMessages
 import Drop
 
 class Attack_messages():

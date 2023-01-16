@@ -8,15 +8,15 @@ import GameStrings
 class Buff():
    # параметр увеличения здоровья игрока при посещении магазина Братишкино логово
    bratishki_health_up_value = 200
+   description = False
 
    # создание класса Бафф - предмета увеличивающего характеристики игрока моментально
-   def __init__(self, health, damage, critical_chance, miss_chance, lifesteal, description):
+   def __init__(self, health, damage, critical_chance, miss_chance, lifesteal):
       self.health = health
       self.damage = damage
       self.critical_chance = critical_chance
       self.miss_chance = miss_chance
       self.lifesteal = lifesteal
-      self.description = description
 
 
 class Item():

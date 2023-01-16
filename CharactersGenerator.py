@@ -11,38 +11,43 @@ import random
 def player_get_stats(hero_name):
    # создание экземпляра игрока с данными характеристиками:
    # имя, здоровье, урон, шанс критической атаки, шанс уклонения, 
-   # вампиризм, регенерация, описание героя, название способности, иконка
+   # вампиризм, регенерация, название способности, иконка
    global player
 
    # Митя
    if hero_name == PlayerStrings.Mitya.name:
       player = Characters.Player(hero_name, 800, 100, 0, 0, 20, 0, 
-                                 PlayerStrings.Mitya.description(), GameStrings.ButtonText.mitya_skill,
+                                 GameStrings.ButtonText.mitya_skill,
                                  GameStrings.Icons.mitya)
+      player.description = PlayerStrings.Mitya.description()
 
    # Саня 
    elif hero_name == PlayerStrings.Sanya.name:
       player = Characters.Player(hero_name, 1000, 200, 30, 0, 0, 0, 
-                                 PlayerStrings.Sanya.description(), GameStrings.ButtonText.sanya_skill, 
+                                 GameStrings.ButtonText.sanya_skill, 
                                  GameStrings.Icons.sanya)
+      player.description = PlayerStrings.Sanya.description()
                                  
    # Тошик   
    elif hero_name == PlayerStrings.Toshik.name:
       player = Characters.Player(hero_name, 1500, 100, 0, 0, 0, 0, 
-                                 PlayerStrings.Toshik.description(), GameStrings.ButtonText.toshik_skill, 
+                                 GameStrings.ButtonText.toshik_skill, 
                                  GameStrings.Icons.toshik)
+      player.description = PlayerStrings.Toshik.description()
                                  
    # Коля   
    elif hero_name == PlayerStrings.Kolya.name:
       player = Characters.Player(hero_name, 1200, 100, 0, 0, 0, 0, 
-                                 PlayerStrings.Kolya.description(), GameStrings.ButtonText.kolya_skill, 
+                                 GameStrings.ButtonText.kolya_skill, 
                                  GameStrings.Icons.kolya)
+      player.description = PlayerStrings.Kolya.description()
                                  
    # Темыч   
    elif hero_name == PlayerStrings.Temich.name:
       player = Characters.Player(hero_name, 800, 150, 0, 15, 0, 0, 
-                                 PlayerStrings.Temich.description(), GameStrings.ButtonText.temich_skill, 
+                                 GameStrings.ButtonText.temich_skill, 
                                  GameStrings.Icons.temich)
+      player.description = PlayerStrings.Temich.description()
                                  
 
 
@@ -122,7 +127,7 @@ def boss_get_stats(boss_name):
    elif boss_name == BossStrings.Sledovatel.name:
       boss = Characters.Boss(boss_name, 1500, 100, 0, 50, 0, 0, 
                               BossStrings.Sledovatel.description)
-      boss.sledovatel_busted_level = 10
+      boss.skill_meter_level = 10
    
    # Донер Кебаб
    elif boss_name == BossStrings.Doner.name:
@@ -138,7 +143,7 @@ def boss_get_stats(boss_name):
    elif boss_name == BossStrings.Dron.name:
       boss = Characters.Boss(boss_name, 2000, 100, 0, 0, 0, 0, 
                               BossStrings.Dron.description)
-      boss.dron_obida_level = 5
+      boss.skill_meter_level = 5
    
    # Валера Гладиатор
    elif boss_name == BossStrings.Glad.name:

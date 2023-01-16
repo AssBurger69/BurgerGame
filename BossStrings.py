@@ -3,6 +3,7 @@
 # и его взаимодействия с игроком, локациями и предметами
 
 import ItemsGenerator
+import CharactersGenerator
 import GameStrings
 import Locations
 import InteractionParameters
@@ -206,3 +207,11 @@ class Makar():
 class Gomozeki():
    name = 'Гомогомозеки'
    description = 'Голые, рельефные и агрессивно-активно настроенные'
+
+
+def boss_skill_meter_message(boss_name):
+
+   if boss_name == Sledovatel.name:
+         return '{0}{1} {2}%{0}'.format(GameStrings.Icons.chains, Sledovatel.skill_meter, CharactersGenerator.player.police_level)
+   elif boss_name == Dron.name:
+         return '{0}{1} {2}%{0}'.format(GameStrings.Icons.obida, Dron.skill_meter, CharactersGenerator.boss.skill_meter_level)

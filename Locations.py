@@ -22,26 +22,28 @@ class Location():
 
    location_name = random.choice(location_list)
 
+   description = False
+
    # создание класса Локация
-   def __init__(self, health, damage, critical_chance, name, description, icon):
+   def __init__(self, health, damage, critical_chance, name, icon):
       self.health = health
       self.damage = damage
       self.critical_chance = critical_chance
       self.name = name
-      self.description = description
       self.icon = icon
 
 def location_choice(location_name):
    # создание экземпляра локации с данными значениями:
    # Влияние на здоровье, влияние на урон, влияние на критический шанс
-   # имя локации, ее описание и иконка
+   # имя локации и иконка
    global loc
 
    # Хата Колбаса
    if location_name == LocationStrings.Kolbas.name:
 
-      loc = Location(10, 0, 0, location_name, LocationStrings.Kolbas.description(), 
+      loc = Location(10, 0, 0, location_name, 
                      GameStrings.Icons.kolbas)
+      Location.description = LocationStrings.Kolbas.description()                     
 
       # применение эффекта локации
       CharactersGenerator.player.health_down_procent(loc.health)
@@ -56,8 +58,9 @@ def location_choice(location_name):
    # Полазна
    elif location_name == LocationStrings.Polazna.name:
 
-      loc = Location(20, 10, 0, location_name, LocationStrings.Polazna.description(), 
+      loc = Location(20, 10, 0, location_name, 
                      GameStrings.Icons.polazna)
+      Location.description = LocationStrings.Polazna.description()                     
 
       # применение эффекта локации
       CharactersGenerator.player.health_up_procent(loc.health)
@@ -67,8 +70,9 @@ def location_choice(location_name):
    # Город Богов
    elif location_name == LocationStrings.GodCity.name:
 
-      loc = Location(10, 10, 10, location_name, LocationStrings.GodCity.description(), 
+      loc = Location(10, 10, 10, location_name, 
                      GameStrings.Icons.god_city)
+      Location.description = LocationStrings.GodCity.description()                     
 
       # применение эффекта локации 
       CharactersGenerator.player.health_up_procent(CharactersGenerator.player, loc.health)
@@ -86,8 +90,9 @@ def location_choice(location_name):
    # Бэд трип
    elif location_name == LocationStrings.BadTrip.name:
 
-      loc = Location(20, 20, 0, location_name, LocationStrings.BadTrip.description(), 
+      loc = Location(20, 20, 0, location_name, 
                      GameStrings.Icons.badtrip)
+      Location.description = LocationStrings.BadTrip.description()                     
 
       # интерактив с игроком Темыч
       if CharactersGenerator.player.name == PlayerStrings.Temich.name:
@@ -109,8 +114,9 @@ def location_choice(location_name):
    # Молебка   
    elif location_name == LocationStrings.Molebka.name:
 
-      loc = Location(20, 10, 0, location_name, LocationStrings.Molebka.description(), 
+      loc = Location(20, 10, 0, location_name, 
                      GameStrings.Icons.molebka)
+      Location.description = LocationStrings.Molebka.description()                     
 
       # интерактив с игроком Тошик
       if CharactersGenerator.player.name == PlayerStrings.Toshik.name:
@@ -127,8 +133,9 @@ def location_choice(location_name):
    # Армия
    elif location_name == LocationStrings.Army.name:
 
-      loc = Location(50, 30, 0, location_name, LocationStrings.Army.description(), 
+      loc = Location(50, 30, 0, location_name, 
                      GameStrings.Icons.army)
+      Location.description = LocationStrings.Army.description()                     
 
       # применение эффекта локации                     
       CharactersGenerator.player.health_down_procent(loc.health)
@@ -138,8 +145,9 @@ def location_choice(location_name):
    # Дрочильня
    elif location_name == LocationStrings.Drochilnya.name:
 
-      loc = Location(0, 10, 10, location_name, LocationStrings.Drochilnya.description(), 
+      loc = Location(0, 10, 10, location_name, 
                      GameStrings.Icons.drochilnya)
+      Location.description = LocationStrings.Drochilnya.description()                     
 
       # применение эффекта локации
       CharactersGenerator.player.damage_up_procent(loc.damage)
@@ -154,8 +162,9 @@ def location_choice(location_name):
    # 25й этаж
    elif location_name == LocationStrings.Stage25.name:
 
-      loc = Location(0, 50, 10, location_name, LocationStrings.Stage25.description(), 
+      loc = Location(0, 50, 10, location_name, 
                      GameStrings.Icons.stage25)
+      Location.description = LocationStrings.Stage25.description()                     
 
       # применение эффекта локации
       CharactersGenerator.player.damage_down_procent(loc.damage)
