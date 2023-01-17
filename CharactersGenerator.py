@@ -136,7 +136,7 @@ def boss_get_stats(boss_name):
    
    # Черный Стас
    elif boss_name == BossStrings.BlackStas.name:
-      boss = Characters.Boss(boss_name, 1500, 300, 0, 0, 0, 0, 
+      boss = Characters.Boss(boss_name, 1500, 300, 0, 30, 0, 0, 
                               BossStrings.BlackStas.description)
    
    # Дрон

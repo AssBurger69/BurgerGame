@@ -135,7 +135,7 @@ def stats_upgrade(message):
                            reply_markup=keyboard)
 
    # сообщение с характеристиками персонажа                           
-   bot.send_message(message.from_user.id, StatsStrings.player_stats_message())
+   bot.send_message(message.from_user.id, StatsStrings.player_stats())
 
    # переход к подбору босса                           
    bot.register_next_step_handler(msg, boss_choice)
@@ -163,7 +163,7 @@ def boss_choice(message):
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
       keyboard.add(GameStrings.Text.location_choice_question)
       # сообщение с характеристиками босса
-      msg = bot.send_message(message.from_user.id, text = StatsStrings.boss_stats_message(), 
+      msg = bot.send_message(message.from_user.id, text = StatsStrings.boss_stats(), 
                               reply_markup=keyboard)
       bot.register_next_step_handler(msg, location)
 
@@ -185,7 +185,7 @@ def location(message):
    keyboard.add(GameStrings.ButtonText.get_fight)
 
    # сообщение с характеристиками игрока, переход к началу боя
-   msg = bot.send_message(message.from_user.id, text = StatsStrings.player_stats_message(), 
+   msg = bot.send_message(message.from_user.id, text = StatsStrings.player_stats(), 
                            reply_markup=keyboard)
    bot.register_next_step_handler(msg, start_fight)
 
@@ -227,9 +227,9 @@ def action_choice(message):
 
       # проверка количества возникших сообщений в цикле атаки,
       # их вывод пока они не закончатся
-      while len(FightCycle.Attack_messages.attack_messages_list) > 0:
-         bot.send_message(message.from_user.id, FightCycle.Attack_messages.attack_messages_list[0])
-         del FightCycle.Attack_messages.attack_messages_list[0]
+      while len(FightCycle.Attack_messages.messages_pool) > 0:
+         bot.send_message(message.from_user.id, FightCycle.Attack_messages.messages_pool[0])
+         del FightCycle.Attack_messages.messages_pool[0]
 
       # клавиатура с подтверждением конца хода
       keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
@@ -247,7 +247,7 @@ def action_choice(message):
       FightCycle.player_skill_use()
 
       # сообщение с описанием эффекта способности
-      bot.send_message(message.from_user.id, FightCycle.Attack_messages.skill_use_message)
+      bot.send_message(message.from_user.id, FightCycle.Attack_messages.skill_use)
 
       # переход к проверке на победу в бою
       victory_check(message)
@@ -257,7 +257,7 @@ def action_choice(message):
       FightCycle.player_item_use()
 
       # сообщение с описанием эффекта предмета
-      bot.send_message(message.from_user.id, FightCycle.Attack_messages.item_use_message)
+      bot.send_message(message.from_user.id, FightCycle.Attack_messages.item_use)
 
       # особое сообщение, если предмет влияет на конкретного игрока
       if Drop.Item.player_iteraction_message != False:
@@ -305,12 +305,12 @@ def next_fight(message):
    FightCycle.fight_victory()
 
    # особое сообщение если игрок Саня победил босса Саша Шлякин
-   if FightCycle.Attack_messages.sanya_win_sanya_message != False:
-      bot.send_message(message.from_user.id, FightCycle.Attack_messages.sanya_win_sanya_message)
+   if FightCycle.Attack_messages.sanya_win_sanya != False:
+      bot.send_message(message.from_user.id, FightCycle.Attack_messages.sanya_win_sanya)
 
    # особое сообщение для пассивной способности игрока Тошик
-   elif FightCycle.Attack_messages.toshik_passive_skill_message != False:
-      bot.send_message(message.from_user.id, FightCycle.Attack_messages.toshik_passive_skill_message)
+   elif FightCycle.Attack_messages.toshik_passive_skill != False:
+      bot.send_message(message.from_user.id, FightCycle.Attack_messages.toshik_passive_skill)
 
    # клавиатура с подтверждением перехода на следующий уровень
    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
