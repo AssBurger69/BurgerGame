@@ -1,6 +1,8 @@
 import CharactersGenerator
+import Characters
 import FightCycle
 import FightFunctions
+import InteractionParameters
 import BossStrings
 import GameStrings
 
@@ -28,7 +30,7 @@ class Banners():
 
    def stan(pers_name):
       # оглушение
-      return '{0} {1}\n{2}{3}{2}'.format(pers_name, GameStrings.Text.stan, 
+      return '{0} {1}\n{2}{3}{2}'.format(pers_name, GameStrings.Text.stan_banner, 
                                           GameStrings.Icons.stan, 'Оглушение')                                             
 
 
@@ -66,85 +68,178 @@ class Banners():
                                                 CharactersGenerator.player.icon, 
                                                 FightFunctions.lifesteal_heal, 
                                                 GameStrings.Icons.player_health)
-                                                
 
-class Message_text():
-   
+   def ressurection(pers):
+      # воскрешение игрока
+      if pers == True:
+         return '{0}{1}{0}\n{2}+{3}{4}'.format(GameStrings.Icons.ressurection, 
+                                                GameStrings.Text.ressurection_banner,
+                                                CharactersGenerator.player.icon,
+                                                Characters.Pers.ressurection_value,
+                                                GameStrings.Icons.player_health)
+
+      # воскрешение босса
+      elif pers == False:
+         # особое воскрешение босса Чайковский
+         if CharactersGenerator.boss.name == BossStrings.Chaikovskii.name:
+            return '{0}{1}{0}\n{2}+{3}{4}'.format(GameStrings.Icons.ressurection, 
+                                                   BossStrings.Chaikovskii.ressurection,
+                                                   CharactersGenerator.boss.icon,
+                                                   Characters.Pers.ressurection_value,
+                                                   GameStrings.Icons.boss_health)
+
+         # для всех остальных боссов                                                   
+         else:
+            return '{0}{1}{0}\n{2}+{3}{4}'.format(GameStrings.Icons.ressurection, 
+                                                   GameStrings.Text.ressurection_banner,
+                                                   CharactersGenerator.boss.icon,
+                                                   Characters.Pers.ressurection_value,
+                                                   GameStrings.Icons.boss_health)
+   def bleeding(pers):
+      # кровотечение игрока
+      if pers == True:
+         return '{0}{1}{0}\n{2}-{3}{4}'.format(GameStrings.Icons.bleeding, 
+                                                GameStrings.Text.bleeding_banner, 
+                                                CharactersGenerator.player.icon,
+                                                Characters.Pers.regeneration_value,
+                                                GameStrings.Icons.player_health)
+
+      # кровотечение босса                                                
+      elif pers == False:
+         return '{0}{1}{0}\n{2}-{3}{4}'.format(GameStrings.Icons.bleeding, 
+                                                GameStrings.Text.bleeding_banner, 
+                                                CharactersGenerator.boss.icon,
+                                                Characters.Pers.regeneration_value,
+                                                GameStrings.Icons.boss_health)                                 
+
+   def poison(pers):
+      if pers == True:
+      # отравление игрока
+         return '{0}{1}{0}\n{2}-{3}%{4}'.format(GameStrings.Icons.poison,
+                                                GameStrings.Text.poison_banner,
+                                                CharactersGenerator.player.icon,
+                                                Characters.Pers.poison_damage, 
+                                                GameStrings.Icons.player_health)
+      elif pers == False:                                                
+         # отравление босса
+         return '{0}{1}{0}\n{2}-{3}%{4}'.format(GameStrings.Icons.poison,
+                                                GameStrings.Text.poison_banner,
+                                                CharactersGenerator.boss.icon,
+                                                Characters.Pers.poison_damage, 
+                                                GameStrings.Icons.boss_health)                                             
+
+   def regeneration(pers):
+      # регенерация игрока
+      if pers == True:
+         return '{0}{1}{0}\n{1}+{2}{3}'.format(GameStrings.Icons.regeneration, 
+                                                GameStrings.Text.regeneration_banner, 
+                                                CharactersGenerator.player.icon,
+                                                Characters.Pers.regeneration_value,
+                                                GameStrings.Icons.player_health)
+
+      # регенерация босса
+      elif pers == False:
+         return '{0}{1}{0}\n{1}+{2}{3}'.format(GameStrings.Icons.regeneration, 
+                                                GameStrings.Text.regeneration_banner, 
+                                                CharactersGenerator.boss.icon,
+                                                Characters.Pers.regeneration_value,
+                                                GameStrings.Icons.boss_health)                                                                                                 
+
+class BossMessages():
+
+   def viv_end_skill():
+      return '{0}\n{1}+{2}{3}'.format(BossStrings.Viv.end_skill, 
+                                       CharactersGenerator.boss.icon, 
+                                       CharactersGenerator.boss.viv_end_skill_damage_up, 
+                                       GameStrings.Icons.damage)
+
+   def kitty_stan():
+      return '{0}\n{1}+{2}'.format(BossStrings.Kitty.stan_skill, 
+                                    CharactersGenerator.player.icon, 
+                                    GameStrings.Icons.stan)
+
+   def kitty_bleeding():
+      return '{0}\n{1}-{2}{3}'.format(BossStrings.Kitty.bleeding_skill, 
+                                       CharactersGenerator.player.icon, 
+                                       CharactersGenerator.boss.kitty_end_skill_damage, 
+                                       GameStrings.Icons.player_health, GameStrings.Icons.bleeding)
       
+   def drunk_leha_boost():
+      return '{0}\n{1}+{2}%{3} +{2}%{4}'.format(BossStrings.DrunkLeha.end_skill, 
+                                                CharactersGenerator.boss.icon, 
+                                                CharactersGenerator.boss.drunk_leha_end_skill_boost, 
+                                                GameStrings.Icons.boss_health, 
+                                                GameStrings.Icons.damage)
    
+   def doc_leha_bleeding():
+      return '{0}\n{1}-{2}{3}{4}'.format(BossStrings.DocLeha.end_skill, 
+                                          CharactersGenerator.player.icon, 
+                                          CharactersGenerator.boss.doc_leha_end_skill_damage, 
+                                          GameStrings.Icons.player_health, 
+                                          GameStrings.Icons.bleeding)
 
-   def boss_item_iteraction_message(x):
-      return '{0}\n{1}{2}{3}'.format(x, Characters.boss.icon, GameStrings.Text.plus, Drop.item)
-
-
-
-
-
-
-  
-  
-   def chaikovskii_ressurection_message():
-      return '{0}\n{1}+{2}{3}'.format(GameStrings.Text.chaikovskii_ressurection_text, Characters.boss.icon, str(Characters.Player.ressurection), GameStrings.Text.boss_health)
-
-   def boss_ressurection_message():
-      return '{0}\n{1}+{2}{3}'.format(GameStrings.Text.ressurection_text, Characters.boss.icon, str(Characters.Player.ressurection), GameStrings.Text.boss_health)
-
-   def char_ressurection_message():
-      return '{0}\n{1}+{2}{3}'.format(GameStrings.Text.ressurection_text, Characters.player.icon, str(Characters.Player.ressurection), GameStrings.Text.player_health)
-
-   def viv_end_skill_message():
-      return '{0}\n{1}+{2}{3}'.format(GameStrings.Text.viv_end_skill_text, Characters.boss.icon, str(Characters.boss.viv_end_skill_damage_up), GameStrings.Text.damage)
-
-   def kitty_stan_message():
-      return '{0}\n{1}+{2}'.format(GameStrings.Text.kitty_stan_text, Characters.player.icon, GameStrings.Text.stan)
-
-   def kitty_bleeding_message():
-      return '{}\n{}-{}{}'.format(GameStrings.Text.kitty_bleeding_text, Characters.player.icon, str(Characters.boss.kitty_end_skill_damage), GameStrings.Text.player_health, GameStrings.Text.bleeding)
+   def mel_end_skill():
+      return '{0}\n{1}-{2}{3}'.format(BossStrings.Mel.end_skill, 
+                                       CharactersGenerator.player.icon, 
+                                       CharactersGenerator.boss.mel_end_skill_damage, 
+                                       GameStrings.Icons.player_health)
       
-   def drunk_leha_boost_message():
-      return '{0}\n{1}+{2}%{3} +{2}%{4}'.format(GameStrings.Text.drunk_leha_skill_text, Characters.boss.icon, str(Characters.boss.drunk_leha_end_skill_boost), GameStrings.Text.boss_health, GameStrings.Text.damage)
+   def dron_end_skill():
+      return '{0}\n{1}-{2}{3}'.format(BossStrings.Dron.end_skill, 
+                                       CharactersGenerator.player.icon, 
+                                       CharactersGenerator.boss.dron_end_skill_damage, 
+                                       GameStrings.Icons.player_health)
+      
+   def glad_damage_skill():
+      return '{0}\n{1}-{2}{3}'.format(BossStrings.Glad.damage_skill, 
+                                       CharactersGenerator.player.icon, 
+                                       CharactersGenerator.boss.glad_end_skill_damage, 
+                                       GameStrings.Icons.player_health)
    
-   def doc_leha_bleeding_message():
-      return '{0}\n{1}-{2}{3}{4}'.format(GameStrings.Text.doc_leha_skill_text, Characters.player.icon, str(Characters.boss.doc_leha_end_skill_damage), GameStrings.Text.player_health, GameStrings.Text.bleeding)
+   def glad_health_up_skill():
+      return '{0}\n{1}+{2}{3}'.format(BossStrings.Glad.health_up_skill, 
+                                       CharactersGenerator.boss.icon, 
+                                       CharactersGenerator.boss.glad_end_skill_health_up, 
+                                       GameStrings.Icons.boss_health)
 
-   def mel_end_skill_message():
-      return '{0}\n{1}-{2}{3}'.format(GameStrings.Text.mel_end_skill_text, Characters.player.icon, str(Characters.boss.mel_end_skill_damage), GameStrings.Text.player_health)
-      
-   def dron_end_skill_message():
-      return '{0}\n{1}-{2}{3}'.format(GameStrings.Text.dron_skill_text, Characters.player.icon, str(Characters.boss.dron_end_skill_damage), GameStrings.Text.player_health)
-      
-   def glad_damage_skill_message():
-      return '{0}\n{1}-{2}{3}'.format(GameStrings.Text.glad_damage_skill_text, Characters.player.icon, str(Characters.boss.glad_end_skill_damage), GameStrings.Text.player_health)
-   
-   def glad_health_up_skill_message():
-      return '{0}\n{1}+{2}{3}'.format(GameStrings.Text.glad_health_up_skill_text, Characters.boss.icon, str(Characters.boss.glad_end_skill_health_up), GameStrings.Text.boss_health)
+   def glad_critical_up_skill():
+      return '{0}\n{1}+{2}%{3}'.format(BossStrings.Glad.critical_up_skill, 
+                                       CharactersGenerator.boss.icon, 
+                                       CharactersGenerator.boss.glad_end_skill_critical_up, 
+                                       GameStrings.Icons.critical_chance)
 
-   def glad_critical_up_skill_message():
-      return '{0}\n{1}+{2}%{3}'.format(GameStrings.Text.glad_critical_up_skill_text, Characters.boss.icon, str(Characters.boss.glad_end_skill_critical_up), GameStrings.Text.critical_chance)
+   def glad_damage_down_skill():
+      return '{0}\n{1}-{2}{3}'.format(BossStrings.Glad.damage_down_skill, 
+                                       CharactersGenerator.player.icon, 
+                                       CharactersGenerator.boss.glad_end_skill_damage_down, 
+                                       GameStrings.Icons.damage)
 
-   def glad_damage_down_skill_message():
-      return '{0}\n{1}-{2}{3}'.format(GameStrings.Text.glad_damage_down_skill_text, Characters.player.icon, str(Characters.boss.glad_damage_down_skill), GameStrings.Text.damage)
+   def glad_poison_skill():
+      return '{0}\n{1}+{2}'.format(BossStrings.Glad.poison_skill, 
+                                    CharactersGenerator.player.icon, 
+                                    GameStrings.Icons.poison)
 
-   def glad_poison_skill_message():
-      return '{0}\n{1}+{2}'.format(GameStrings.Text.glad_poison_skill_text, Characters.player.icon, GameStrings.Text.poison)
+   def shiva_critical_skill():
+      return '{0}\n{1}+{2}%{3}'.format(BossStrings.Shiva.critical_up_skill, 
+                                       CharactersGenerator.boss.icon, 
+                                       CharactersGenerator.boss.shiva_end_skill_critical_up, 
+                                       GameStrings.Icons.critical_chance)
 
-   def shiva_critical_skill_message():
-      return '{0}\n{1}+{2}%{3}'.format(GameStrings.Text.shiva_critical_up_skill_text, Characters.boss.icon, str(Characters.boss.shiva_end_skill_critical_up), GameStrings.Text.critical_chance)
+   def shiva_damage_up_skill():
+      return '{0}\n{1}+{2}%{3}'.format(BossStrings.Shiva.damage_up_skill, 
+                                       CharactersGenerator.boss.icon, 
+                                       CharactersGenerator.boss.shiva_end_skill_damage_up, 
+                                       GameStrings.Icons.damage)
 
-   def shiva_damage_up_skill_message():
-      return '{0}\n{1}+{2}%{3}'.format(GameStrings.Text.shiva_damage_up_skill_text, Characters.boss.icon, str(Characters.boss.shiva_end_skill_damage_up), GameStrings.Text.damage)
+   def sasha_victory():
+      return '{0}\n+{1}%{2}\n+{3}%{4}\n+{5}%{6}'.format(BossStrings.Sasha.victory_fight,
+                                                         InteractionParameters.Boss.sanya_sasha_health_up,
+                                                         InteractionParameters.Boss.sanya_sasha_damage_up,
+                                                         InteractionParameters.Boss.sanya_sasha_critical_up)                                       
 
-   def bleeding_message(pers_icon, pers_health_icon):
-      return '{0}\n{1}-{2}{3}'.format(GameStrings.Text.bleeding_text, pers_icon, str(Characters.Pers.bleeding_damage), pers_health_icon)
-
-   def poison_message(pers_icon, pers_health_icon):
-      return '{0}\n{1}-{2}%{3}'.format(GameStrings.Text.poison_text, pers_icon, str(Characters.Pers.poison_damage), pers_health_icon)
-
-   def regeneration_message(pers_icon, pers_health_icon):
-      return '{0}\n{1}+{2}{3}'.format(GameStrings.Text.regeneration_text, pers_icon, str(Characters.Pers.regeneration), pers_health_icon)
-
-   def sanya_skill_message():
+   def sasha_skill_message():
       return '{0}-{1}{2}'.format(Characters.boss.icon, str(Fight.sanya_skill_damage), GameStrings.Text.sanya_skill_effect_text)
 
+
    def temich_skill_stan_message():
-      return '{0}\n{1}+{2}'.format(GameStrings.Text.temich_skill_deffect_text, Characters.player.icon, GameStrings.Text.stan)
+      return '{0}\n{1}+{2}'.format(GameStrings.Text.temich_skill_deffect_text, Characters.player.icon, GameStrings.Text.stan_banner)

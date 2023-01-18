@@ -48,6 +48,7 @@ class Sasha():
    description = 'Убей его и возвысь себя'
    # сообщение об замене босса, если игрок не является Саней
    cancel_fight = 'Саша Шлякин нападает только на самого себя, подберем тебе другого'
+   victory_fight = 'Опять ты себя покусал, Саня'
 
 
 class Tvar():
@@ -212,6 +213,8 @@ class Gomozeki():
 def boss_skill_meter_message(boss_name):
 
    if boss_name == Sledovatel.name:
-         return '{0}{1} {2}%{0}'.format(GameStrings.Icons.chains, Sledovatel.skill_meter, CharactersGenerator.player.police_level)
+         return '{0}{1} {2}%{0}'.format(GameStrings.Icons.chains, Sledovatel.skill_meter, 
+                                          CharactersGenerator.player.police_wanted)
    elif boss_name == Dron.name:
-         return '{0}{1} {2}%{0}'.format(GameStrings.Icons.obida, Dron.skill_meter, CharactersGenerator.boss.skill_meter_level)
+         return '{0}{1} {2}%{0}'.format(GameStrings.Icons.obida, Dron.skill_meter, 
+                                          CharactersGenerator.boss.skill_meter_level)

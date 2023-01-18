@@ -6,8 +6,6 @@ class Boss():
    doner_sock = 100
    doner_harchok = 200
    doner_kolbas = 500
-
-   inkvisizia_mitya_health_up = 50
    
    sanya_sasha_health_up = 20
    sanya_sasha_damage_up = 20

@@ -1,4 +1,6 @@
 import random
+import Characters
+import BossStrings
 import CharactersGenerator
 import FightCycle
 import FightStrings
@@ -73,26 +75,28 @@ def chance(x):
    return chance
 
 def bleeding():
-   # проверка игрока на кровотечение и отсутствие иммунитета к нему, применение кровотечения, вывод сообщения
-   if Characters.player.bleeding == True and Characters.player.immunity == False:
-      Characters.player.health_down(Characters.Pers.bleeding_damage)
-      FightCycle.Attack_messages.messages_pool.append(BotMessages.Message_text.bleeding_message(Characters.player.icon, MyStrings.Text.player_health.value))
+   # проверка игрока на кровотечение и отсутствие иммунитета к нему, применение кровотечения
+   if CharactersGenerator.player.bleeding == True and \
+      CharactersGenerator.player.immunity == False:
+      CharactersGenerator.player.health_down(Characters.Pers.bleeding_damage)
+      FightCycle.Attack_messages.messages_pool.append(FightStrings.Banners.bleeding(True))
       
    # проверка босса на кровотечение, его применение и вывод сообщения
-   if Characters.boss.bleeding == True:
-      Characters.boss.health_down(Characters.Pers.bleeding_damage)
-      FightCycle.Attack_messages.messages_pool.append(BotMessages.Message_text.bleeding_message(Characters.boss.icon, MyStrings.Text.boss_health.value))
+   if CharactersGenerator.boss.bleeding == True:
+      CharactersGenerator.boss.health_down(Characters.Pers.bleeding_damage)
+      FightCycle.Attack_messages.messages_pool.append(FightStrings.Banners.bleeding(False))
 
 def poison():
    # проверка игрока на отравление и отсутствие иммунитета к нему, применение, вывод сообщения
-   if Characters.player.poison == True and Characters.player.immunity == False:
-      Characters.player.health_down_procent(Characters.Pers.poison_damage)
-      FightCycle.Attack_messages.messages_pool.append(BotMessages.Message_text.poison_message(Characters.player.icon, MyStrings.Text.player_health.value))
+   if CharactersGenerator.player.poison == True and \
+      CharactersGenerator.player.immunity == False:
+      CharactersGenerator.player.health_down_procent(Characters.Pers.poison_damage)
+      FightCycle.Attack_messages.messages_pool.append(FightStrings.Banners.poison(True))
 
    # проверка босса на отравление, применение, вывод сообщения
    if CharactersGenerator.boss.poison == True:
-      CharactersGenerator.boss.health_down_procent(CharactersGenerator.Pers.poison_damage)
-      FightCycle.Attack_messages.messages_pool.append(BotMessages.Message_text.poison_message(Characters.boss.icon, MyStrings.Text.boss_health.value))
+      CharactersGenerator.boss.health_down_procent(Characters.Pers.poison_damage)
+      FightCycle.Attack_messages.messages_pool.append(FightStrings.Banners.poison(False))
 
    # увеличение на 10% урона отравления на время боя
    Characters.Pers.poison_damage += 10
@@ -100,13 +104,13 @@ def poison():
 def regeneration():
    # проверка игрока на регенерацию, применение, вывод сообщения
    if CharactersGenerator.player.regeneration > 0:
-      CharactersGenerator.player.health_up(CharactersGenerator.Pers.regeneration_value)
-      FightCycle.Attack_messages.messages_pool.append(BotMessages.Message_text.regeneration_message(Characters.player.icon, MyStrings.Text.player_health.value))
+      CharactersGenerator.player.health_up(Characters.Pers.regeneration_value)
+      FightCycle.Attack_messages.messages_pool.append(FightStrings.Banners.regeneration(True))
 
    # проверка босса на регенерацию, применение, вывод сообщения   
    if CharactersGenerator.boss.regeneration > 0:
-      CharactersGenerator.boss.health_up(CharactersGenerator.Pers.regeneration_value)
-      FightCycle.Attack_messages.messages_pool.append(BotMessages.Message_text.regeneration_message(Characters.boss.icon, MyStrings.Text.boss_health.value))
+      CharactersGenerator.boss.health_up(Characters.Pers.regeneration_value)
+      FightCycle.Attack_messages.messages_pool.append(FightStrings.Banners.regeneration(False))
 
 def lifesteal():
    global lifesteal_heal

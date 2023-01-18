@@ -1,13 +1,14 @@
 import Characters
+import ItemsGenerator
 import CharactersGenerator
 import FightFunctions
 import FightStrings
-import GameStrings
+import InteractionParameters
 import BossStrings
+import GameStrings
 import StatsStrings
 import PlayerStrings
 import random
-import Drop
 
 class Attack_messages():
    # вспомогательный класс, для создания списка 
@@ -70,9 +71,9 @@ def attack():
          boss_attack()
 
    boss_end_skill_activation()
-   bleeding()
-   poison()
-   regeneration()
+   FightFunctions.bleeding()
+   FightFunctions.poison()
+   FightFunctions.regeneration()
    boss_charge_skill_up()
 
 def player_attack():
@@ -124,193 +125,204 @@ def boss_attack():
       
 def boss_end_skill_activation():  
    # проверка на уровень здоровья и статус воскрешения босса, применение воскрешения
-   if CharactersGenerator.boss.resurrection == True and Characters.boss.health <= 200:
+   if CharactersGenerator.boss.resurrection == True and \
+      CharactersGenerator.boss.health <= 200:
       CharactersGenerator.boss.resurrection = False
-      CharactersGenerator.boss.health_up(800)
-      # особое сообщение если босс Чайковский
-      if CharactersGenerator.boss.name == MyStrings.Text.chaikovskii_name.value:
-         Attack_messages.messages_pool.append(BotMessages.Message_text.chaikovskii_ressurection_message())
-      # обычное сообщение воскрешения
-      else:
-         Attack_messages.messages_pool.append(BotMessages.Message_text.boss_ressurection_message())
+      CharactersGenerator.boss.health_up(Characters.Pers.ressurection_value)
+      Attack_messages.messages_pool.append(FightStrings.Banners.ressurection(False))
       
-   # применение завершающей способности Вива, вывод сообщения
-   elif Characters.boss.name == MyStrings.Text.viv_name.value:
-      Characters.boss.damage_up(Characters.boss.viv_end_skill_damage_up)
-      Attack_messages.messages_pool.append(BotMessages.Message_text.viv_end_skill_message())
+   # применение завершающей способности Вива
+   elif CharactersGenerator.boss.name == BossStrings.Viv.name:
+      CharactersGenerator.boss.damage_up(Characters.Boss.viv_end_skill_damage_up)
+      Attack_messages.messages_pool.append(FightStrings.BossMessages.viv_end_skill())
 
-   # применение завершающей рандомной способности Котенка, вывод сообщения
-   elif Characters.boss.name == MyStrings.Text.kitty_name.value and chance(Characters.boss.end_skill_chance) == True:
+   # применение завершающей рандомной способности Котенка
+   elif CharactersGenerator.boss.name == BossStrings.Kitty.name and \
+         FightFunctions.chance(CharactersGenerator.boss.end_skill_chance) == True:
       kitty_skill_choice = random.randint(0, 11)
       # оглушение на игрока
       if kitty_skill_choice > 5:
-         Characters.player.stan_timer = 1
-         Attack_messages.messages_pool.append(BotMessages.Message_text.kitty_stan_message())
+         CharactersGenerator.player.stan_timer = 1
+         Attack_messages.messages_pool.append(FightStrings.BossMessages.kitty_stan())
       # кровотечение на игрока
       elif kitty_skill_choice <= 5:
-         Characters.player.health_down(Characters.boss.kitty_end_skill_damage)
-         Characters.player.bleeding = True
-         Attack_messages.messages_pool.append(BotMessages.Message_text.kitty_bleeding_message())
+         CharactersGenerator.player.health_down(CharactersGenerator.boss.kitty_end_skill_damage)
+         CharactersGenerator.player.bleeding = True
+         Attack_messages.messages_pool.append(FightStrings.BossMessages.kitty_bleeding())
    
-   # применение завершающей способности Пьяного Лехи, вывод сообщения
-   elif Characters.boss.name == MyStrings.Text.drunk_leha_name.value:
-      Characters.boss.health_up_procent(Characters.boss.drunk_leha_end_skill_boost)
-      Characters.boss.damage_up_procent(Characters.boss.drunk_leha_end_skill_boost)
-      Attack_messages.messages_pool.append(BotMessages.Message_text.drunk_leha_boost_message())
+   # применение завершающей способности Пьяного Лехи
+   elif CharactersGenerator.boss.name == BossStrings.DrunkLeha.name:
+      CharactersGenerator.boss.health_up_procent(CharactersGenerator.boss.drunk_leha_end_skill_boost)
+      CharactersGenerator.boss.damage_up_procent(CharactersGenerator.boss.drunk_leha_end_skill_boost)
+      Attack_messages.messages_pool.append(FightStrings.BossMessages.drunk_leha_boost())
       
-   # применение завершающей способности Доктора Лехи, вывод сообщения
-   elif Characters.boss.name == MyStrings.Text.doc_leha_name.value and chance(Characters.boss.end_skill_chance) == True:
-      Characters.player.health_down(Characters.boss.doc_leha_end_skill_damage)
-      Characters.player.bleeding = True
-      Attack_messages.messages_pool.append(BotMessages.Message_text.doc_leha_bleeding_message())
+   # применение завершающей способности Доктора Лехи
+   elif CharactersGenerator.boss.name == BossStrings.DocLeha.name \
+         and FightFunctions.chance(CharactersGenerator.boss.end_skill_chance) == True:
+      CharactersGenerator.player.health_down(CharactersGenerator.boss.doc_leha_end_skill_damage)
+      CharactersGenerator.player.bleeding = True
+      Attack_messages.messages_pool.append(FightStrings.BossMessages.doc_leha_bleeding())
       
-   # применение завершающей способности Мела, вывод сообщения
-   elif Characters.boss.name == MyStrings.Text.mel_name.value and Characters.boss.mel_blazer_level >= 3:
-      Characters.boss.mel_blazer_level = 0
-      Characters.player.health_down(Characters.boss.mel_end_skill_damage)
-      Attack_messages.messages_pool.append(BotMessages.Message_text.mel_end_skill_message())
+   # применение завершающей способности Мела
+   elif CharactersGenerator.boss.name == BossStrings.Mel.name \
+         and CharactersGenerator.boss.skill_meter_level >= 3:
+      CharactersGenerator.boss.skill_meter_level = 0
+      CharactersGenerator.player.health_down(CharactersGenerator.boss.mel_end_skill_damage)
+      Attack_messages.messages_pool.append(FightStrings.BossMessages.mel_end_skill())
       
-   # применение завершающей способности Дрона, вывод сообщения
-   elif Characters.boss.name == MyStrings.Text.dron_name.value:
-      if chance(Characters.boss.dron_obida_level) == True:
-         Characters.player.health_down(Characters.boss.dron_end_skill_damage)
-         Attack_messages.messages_pool.append(BotMessages.Message_text.dron_end_skill_message())
+   # применение завершающей способности Дрона
+   elif CharactersGenerator.boss.name == BossStrings.Dron.name \
+      and FightFunctions.chance(CharactersGenerator.boss.skill_meter_level) == True:
+         CharactersGenerator.player.health_down(CharactersGenerator.boss.dron_end_skill_damage)
+         Attack_messages.messages_pool.append(FightStrings.BossMessages.dron_end_skill())
          
-   # применение одной из рандомных завершающих способностей Валеры, вывод сообщения
-   elif Characters.boss.name == MyStrings.Text.glad_name.value:
+   # применение одной из рандомных завершающих способностей Валеры
+   elif CharactersGenerator.boss.name == BossStrings.Glad.name:
       glad_skill_choice = random.randint(1, 6)
       # нанесение урона игроку
       if glad_skill_choice == 1:
-         Characters.player.health_down(Characters.boss.glad_end_skill_damage)
-         Attack_messages.messages_pool.append(BotMessages.Message_text.glad_damage_skill_message())
+         CharactersGenerator.player.health_down(CharactersGenerator.boss.glad_end_skill_damage)
+         Attack_messages.messages_pool.append(FightStrings.BossMessages.glad_damage_skill())
       # увеличение здоровье Валеры
       elif glad_skill_choice == 2:
-         Characters.boss.health_up(Characters.boss.glad_end_skill_health_up)
-         Attack_messages.messages_pool.append(BotMessages.Message_text.glad_health_up_skill_message())
+         CharactersGenerator.boss.health_up(CharactersGenerator.boss.glad_end_skill_health_up)
+         Attack_messages.messages_pool.append(FightStrings.BossMessages.glad_health_up_skill())
       # увеличение шанса критической атаки Валеры
       elif glad_skill_choice == 3:
-         Characters.boss.critical_chance_up(Characters.boss.glad_end_skill_critical_up)
-         Attack_messages.messages_pool.append(BotMessages.Message_text.glad_critical_up_skill_message())
+         CharactersGenerator.boss.critical_chance_up(CharactersGenerator.boss.glad_end_skill_critical_up)
+         Attack_messages.messages_pool.append(FightStrings.BossMessages.glad_critical_up_skill())
       # уменьшение урона игрока
       elif glad_skill_choice == 4:
-         Characters.player.damage_down(Characters.boss.glad_damage_down_skill_value)
-         Attack_messages.messages_pool.append(BotMessages.Message_text.glad_damage_down_skill_message())
+         CharactersGenerator.player.damage_down(CharactersGenerator.boss.glad_end_skill_damage_down)
+         Attack_messages.messages_pool.append(FightStrings.BossMessages.glad_damage_down_skill())
       # наложение яда на игрока
       elif glad_skill_choice == 5:
-         Characters.player.poison = True
-         Attack_messages.messages_pool.append(BotMessages.Message_text.glad_poison_skill_message())
+         CharactersGenerator.player.poison = True
+         Attack_messages.messages_pool.append(FightStrings.BossMessages.glad_poison_skill())
 
-   # применение завершающей способности Шивы, вывод сообщения
-   elif Characters.boss.name == MyStrings.Text.shiva_name.value:
+   # применение завершающей способности Шивы
+   elif CharactersGenerator.boss.name == BossStrings.Shiva.name:
       # увеличение шанса критической атаки Шивы
-      if Characters.boss.critical_chance < 100:
-         Characters.boss.critical_chance_up(Characters.boss.shiva_end_skill_critical_up)
-         Attack_messages.messages_pool.append(BotMessages.Message_text.shiva_critical_skill_message())
+      if CharactersGenerator.boss.critical_chance < 100:
+         CharactersGenerator.boss.critical_chance_up(CharactersGenerator.boss.shiva_end_skill_critical_up)
+         Attack_messages.messages_pool.append(FightStrings.BossMessages.shiva_critical_skill_message())
       # увеличение атаки Шивы, если шанс критической атаки заполнен до максимума
-      elif Characters.boss.critical_chance >= 100:
-         Characters.boss.damage_up_procent(Characters.boss.shiva_end_skill_damage_up)
-         Attack_messages.messages_pool.append(BotMessages.Message_text.shiva_damage_up_skill_message())   
+      elif CharactersGenerator.boss.critical_chance >= 100:
+         CharactersGenerator.boss.damage_up_procent(CharactersGenerator.boss.shiva_end_skill_damage_up)
+         Attack_messages.messages_pool.append(FightStrings.BossMessages.shiva_damage_up_skill_message())   
 
 
 def boss_charge_skill_up():
    # увеличение шкалы накопительной способности босса
-   if Characters.boss.name == MyStrings.Text.dron_name.value:
-      Characters.boss.dron_obida_level += 5
+   if CharactersGenerator.boss.name == BossStrings.Dron.name:
+      CharactersGenerator.boss.skill_meter_level += 5
 
-   elif Characters.boss.name == MyStrings.Text.sledovatel_name.value:
-      Characters.player.police_level += 20   
+   elif CharactersGenerator.boss.name == BossStrings.Sledovatel.name:
+      CharactersGenerator.player.police_wanted += 20   
 
 def player_skill_use():
-   # использование активной способности, если игрок не оглушен, не обезмолвлен, способность не перезаряжается
-   if Characters.player.cooldown <= 0 and Characters.player.silence == False and Characters.player.stan_timer <= 0:
-      Characters.player.cooldown = 0
-      skill_activation(Characters.player.name)
+   # использование активной способности, 
+   # если игрок не оглушен, не обезмолвлен, 
+   # способность не перезаряжается
+
+   if CharactersGenerator.player.cooldown <= 0 and \
+         CharactersGenerator.player.silence == False and \
+            CharactersGenerator.player.stan_timer <= 0:
+      CharactersGenerator.player.cooldown = 0
+      skill_activation(CharactersGenerator.player.name)
 
    # вывод сообщения если игрок оглушен
-   elif Characters.player.stan_timer > 0:
-      Attack_messages.skill_use = MyStrings.Text.player_stan_text.value
+   elif CharactersGenerator.player.stan_timer > 0:
+      Attack_messages.skill_use = GameStrings.Text.player_stan
 
    # вывод сообщения если игрок обезмолвлен
-   elif Characters.player.silence == True:
-      Attack_messages.skill_use = MyStrings.Text.player_silence_text.value
+   elif CharactersGenerator.player.silence == True:
+      Attack_messages.skill_use = GameStrings.Text.player_silence
 
    # вывод сообщения если способность перезаряжается
-   elif Characters.player.cooldown > 0:
-      Attack_messages.skill_use = MyStrings.Text.cooldown_text.value  
+   elif CharactersGenerator.player.cooldown > 0:
+      Attack_messages.skill_use = GameStrings.Text.player_cooldown  
 
 def skill_activation(player_name):
-   # подбор способности исходя из имени игрока, ее применение, установка перезарядки и вывод сообщения с ее описанием
+   # подбор способности исходя из имени игрока, 
+   # ее применение, установка перезарядки
 
-   if player_name == MyStrings.Text.mitya_name.value:
-      Characters.player.health_down(Characters.player.mitya_health_down_skill_value)
-      Characters.player.damage_up(Characters.player.mitya_damage_up_skill_value)
-      Characters.player.cooldown = 1
-      Characters.player.mitya_elexir_count += 1
-      Attack_messages.skill_use = MyStrings.PlayerText.mitya_skill_effect()
+   if player_name == PlayerStrings.Mitya.name:
+      CharactersGenerator.player.health_down(Characters.Player.mitya_health_down_skill_value)
+      CharactersGenerator.player.damage_up(Characters.Player.mitya_damage_up_skill_value)
+      CharactersGenerator.player.cooldown = 1
+      CharactersGenerator.player.mitya_elexir_count += 1
+      Attack_messages.skill_use = PlayerStrings.Mitya.skill_effect()
 
-   elif player_name == MyStrings.Text.sanya_name.value:
+   elif player_name == PlayerStrings.Sanya.name:
       global sanya_skill_damage
       sanya_skill_damage = random.randint(50, 500)
-      Characters.boss.health_down(sanya_skill_damage)
-      Characters.player.cooldown = 3
-      Attack_messages.skill_use = BotMessages.Message_text.sanya_skill_message()
+      CharactersGenerator.boss.health_down(sanya_skill_damage)
+      CharactersGenerator.player.cooldown = 3
+      Attack_messages.skill_use = PlayerStrings.Sanya.skill_effect()
 
-   elif player_name == MyStrings.Text.toshik_name.value:
-      Characters.player.health_up_procent(Characters.player.toshik_health_up_skill_procent)
-      Characters.player.cooldown = 2
-      Attack_messages.skill_use = MyStrings.Text.toshik_skill_effect_text.value
+   elif player_name == PlayerStrings.Toshik.name:
+      CharactersGenerator.player.health_up_procent(Characters.Player.toshik_health_up_skill_procent)
+      CharactersGenerator.player.cooldown = 2
+      Attack_messages.skill_use = PlayerStrings.Toshik.skill_effect()
 
-   elif player_name == MyStrings.Text.kolya_name.value:
+   elif player_name == PlayerStrings.Kolya.name:
       global kolya_hack_damage_value
-      kolya_hack_damage_value = Characters.boss.damage * 50 // 100
-      Characters.player.damage_up(kolya_hack_damage_value)
-      Characters.boss.damage_down(kolya_hack_damage_value)
-      Characters.player.cooldown = 3
-      Attack_messages.skill_use = BotMessages.Message_text.kolya_skill_message()
+      kolya_hack_damage_value = CharactersGenerator.boss.damage * 50 // 100
+      CharactersGenerator.player.damage_up(kolya_hack_damage_value)
+      CharactersGenerator.boss.damage_down(kolya_hack_damage_value)
+      CharactersGenerator.player.cooldown = 3
+      Attack_messages.skill_use = PlayerStrings.Kolya.skill_effect()
 
-   elif player_name == MyStrings.Text.temich_name.value:
-      temich_skill_check = chance(Characters.player.temich_skill_chance)
+   elif player_name == PlayerStrings.Temich.name:
+      temich_skill_check = FightFunctions.chance(CharactersGenerator.player.temich_skill_chance)
       if temich_skill_check == False:
-         Characters.boss.health, Characters.player.health = Characters.player.health, Characters.boss.health
-         Characters.player.cooldown = 1
-         Attack_messages.skill_use = MyStrings.Text.temich_skill_effect_text.value
+         CharactersGenerator.boss.health, CharactersGenerator.player.health = \
+            CharactersGenerator.player.health, CharactersGenerator.boss.health
+         CharactersGenerator.player.cooldown = 1
+         Attack_messages.skill_use = PlayerStrings.Temich.good_skill_effect()
       elif temich_skill_check == True:
-         Characters.player.stan_timer = 1
-         Attack_messages.skill_use = BotMessages.Message_text.temich_skill_stan_message()
+         CharactersGenerator.player.stan_timer = 1
+         Attack_messages.skill_use = PlayerStrings.Temich.bad_skill_effect()
 
 def player_item_use():
-   if Characters.player.item != MyStrings.Text.empty_text.value and Characters.player.silence == False and Characters.player.stan_timer <= 0:
-      Drop.item_activation(Characters.player.item)
-      Attack_messages.item_use = Drop.item.description
-      Characters.player.item = MyStrings.Text.empty_text.value
+   if CharactersGenerator.player.item != GameStrings.Text.empty and \
+         CharactersGenerator.player.silence == False and \
+            CharactersGenerator.player.stan_timer <= 0:
+      ItemsGenerator.item_activation(CharactersGenerator.player.item)
+      Attack_messages.item_use = ItemsGenerator.item.description
+      CharactersGenerator.player.item = GameStrings.Text.empty
 
-   elif Characters.player.stan_timer > 0:
-      Attack_messages.item_use = MyStrings.Text.player_stan_text.value
+   elif CharactersGenerator.player.stan_timer > 0:
+      Attack_messages.item_use = GameStrings.Text.player_stan
 
-   elif Characters.player.item != MyStrings.Text.empty_text.value and Characters.player.silence == True:
-      Attack_messages.item_use = MyStrings.Text.player_silence_text.value
+   elif CharactersGenerator.player.item != GameStrings.Text.player_stan and \
+         CharactersGenerator.player.silence == True:
+      Attack_messages.item_use = GameStrings.Text.player_silence
 
-   elif Characters.player.item == MyStrings.Text.empty_text.value:
-      Attack_messages.item_use = MyStrings.Text.empty_click_text.value
+   elif CharactersGenerator.player.item == GameStrings.Text.empty:
+      Attack_messages.item_use = GameStrings.Text.empty_click
 
 def fight_victory():
    # сброс всех статусов игрока, увеличение количества побед
-   Characters.player.cooldown = 0
+   CharactersGenerator.player.cooldown = 0
    Characters.Pers.win_rate += 1
-   Characters.player.poison = False
-   Characters.player.bleeding = False
-   Characters.player.silence = False
+   CharactersGenerator.player.poison = False
+   CharactersGenerator.player.bleeding = False
+   CharactersGenerator.player.silence = False
    Characters.Pers.poison_damage = 5
-   Characters.player.police_level = 0
 
-   # если игрок Саня выиграл босса Саню - применение особых наград, вывод сообщения
-   if Characters.Pers.win_rate < 8 and Characters.boss.name == MyStrings.Text.sanya_name.value:
-      Characters.player.health_up_procent(Characters.player.sanya_win_sanya_heath_up_procent)
-      Characters.player.damage_up_procent(Characters.player.sanya_win_sanya_damage_up_procent)
-      Characters.player.critical_chance_up(Characters.player.sanya_win_sanya_critical_up_procent)
-      Attack_messages.sanya_win_sanya = MyStrings.Text.sanya_sasha_text.value
+   # если игрок Саня выиграл босса Саню - применение особых наград
+   if Characters.Pers.win_rate < 8 and CharactersGenerator.boss.name == BossStrings.Sasha:
+      CharactersGenerator.player.health_up_procent(InteractionParameters.Boss.sanya_sasha_health_up)
+      CharactersGenerator.player.damage_up_procent(InteractionParameters.Boss.sanya_sasha_damage_up)
+      CharactersGenerator.player.critical_chance_up(InteractionParameters.Boss.sanya_sasha_critical_up)
+      Attack_messages.messages_pool.append(FightStrings.BossMessages.sasha_victory())
 
-   # если игрок Тошик - применение его пассивной способности, вывод сообщения
-   elif Characters.Pers.win_rate < 8 and Characters.player.name == MyStrings.Text.toshik_name.value:
-      Characters.player.damage_up(Characters.player.health * Characters.player.toshik_passive_skill_procent // 100)
-      Attack_messages.toshik_passive_skill = MyStrings.Text.toshik_passive_skill_text.value
+   # если игрок Тошик - применение его пассивной способности
+   elif Characters.Pers.win_rate < 8 and \
+      CharactersGenerator.player.name == PlayerStrings.Toshik.name:
+      CharactersGenerator.player.damage_up(CharactersGenerator.player.health 
+                                             * CharactersGenerator.player.toshik_passive_skill_procent 
+                                             // 100)
+      Attack_messages.messages_pool.append(PlayerStrings.Toshik.passive_effect())
