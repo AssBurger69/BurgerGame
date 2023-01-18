@@ -29,13 +29,8 @@ def attack():
    # проверка на уворот босса
    if FightFunctions.chance(CharactersGenerator.boss.miss_chance) == True:
 
-      # повышение накопительной способности босса при уклонении, 
-      # если она у него есть
-      if CharactersGenerator.boss.skill_meter_level != 0:
-         CharactersGenerator.boss.skill_meter_level += 1
-
       # особая способность при уклонении босса Черный Стас
-      elif CharactersGenerator.boss.name == BossStrings.BlackStas.name:
+      if CharactersGenerator.boss.name == BossStrings.BlackStas.name:
          CharactersGenerator.player.health_down(CharactersGenerator.player.damage)
 
       # добавление в пул сообщений баннера Уклонение
@@ -205,20 +200,23 @@ def boss_end_skill_activation():
       # увеличение шанса критической атаки Шивы
       if CharactersGenerator.boss.critical_chance < 100:
          CharactersGenerator.boss.critical_chance_up(CharactersGenerator.boss.shiva_end_skill_critical_up)
-         Attack_messages.messages_pool.append(FightStrings.BossMessages.shiva_critical_skill_message())
+         Attack_messages.messages_pool.append(FightStrings.BossMessages.shiva_critical_skill())
       # увеличение атаки Шивы, если шанс критической атаки заполнен до максимума
       elif CharactersGenerator.boss.critical_chance >= 100:
          CharactersGenerator.boss.damage_up_procent(CharactersGenerator.boss.shiva_end_skill_damage_up)
-         Attack_messages.messages_pool.append(FightStrings.BossMessages.shiva_damage_up_skill_message())   
+         Attack_messages.messages_pool.append(FightStrings.BossMessages.shiva_damage_up_skill())   
 
 
 def boss_charge_skill_up():
    # увеличение шкалы накопительной способности босса
    if CharactersGenerator.boss.name == BossStrings.Dron.name:
-      CharactersGenerator.boss.skill_meter_level += 5
+      CharactersGenerator.boss.skill_meter_level += 10
 
    elif CharactersGenerator.boss.name == BossStrings.Sledovatel.name:
-      CharactersGenerator.player.police_wanted += 20   
+      CharactersGenerator.player.police_wanted += 20 
+
+   elif CharactersGenerator.boss.name == BossStrings.Mel.name:
+      CharactersGenerator.boss.skill_meter_level += 1
 
 def player_skill_use():
    # использование активной способности, 

@@ -11,6 +11,9 @@ class Boss():
    sanya_sasha_damage_up = 20
    sanya_sasha_critical_up = 10
 
+   sledovatel_drugs = 50
+   sledovatel_damage_down = 50
+
 
 
 class Player():

@@ -114,6 +114,7 @@ class Boss(Pers):
    returnal_value = 0
    stan_timer = 0
    skill_meter_level = 0
+   skill_meter_level_up = 0
    resurrection = False
    bleeding = False
    poison = False

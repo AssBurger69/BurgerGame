@@ -44,7 +44,7 @@ def item_activation(item_name):
          CharactersGenerator.player.health_up(item.value)
 
    elif item_name == DropStrings.Items.mineralka_name:
-      item - Drop.Item(100, DropStrings.Items.mineralka_description)
+      item = Drop.Item(100, DropStrings.Items.mineralka_description)
       CharactersGenerator.player.regeneration_up(item.value)
 
    elif item_name == MyStrings.Text.lezvie_name.value:

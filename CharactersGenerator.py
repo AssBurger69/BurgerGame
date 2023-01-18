@@ -117,6 +117,8 @@ def boss_get_stats(boss_name):
    elif boss_name == BossStrings.Mel.name:
       boss = Characters.Boss(boss_name, 50, 0, 0, 90, 0, 0, 
                               BossStrings.Mel.description)
+      boss.skill_meter_level_up = 1
+      boss.skill_meter_level += boss.skill_meter_level_up
    
    # Рыжий
    elif boss_name == BossStrings.Redhead.name:
@@ -127,7 +129,6 @@ def boss_get_stats(boss_name):
    elif boss_name == BossStrings.Sledovatel.name:
       boss = Characters.Boss(boss_name, 1500, 100, 0, 50, 0, 0, 
                               BossStrings.Sledovatel.description)
-      boss.skill_meter_level = 10
    
    # Донер Кебаб
    elif boss_name == BossStrings.Doner.name:
@@ -143,7 +144,8 @@ def boss_get_stats(boss_name):
    elif boss_name == BossStrings.Dron.name:
       boss = Characters.Boss(boss_name, 2000, 100, 0, 0, 0, 0, 
                               BossStrings.Dron.description)
-      boss.skill_meter_level = 5
+      boss.skill_meter_level_up = 10                                                               
+      boss.skill_meter_level += boss.skill_meter_level_up
    
    # Валера Гладиатор
    elif boss_name == BossStrings.Glad.name:

@@ -131,7 +131,7 @@ class Banners():
    def regeneration(pers):
       # регенерация игрока
       if pers == True:
-         return '{0}{1}{0}\n{1}+{2}{3}'.format(GameStrings.Icons.regeneration, 
+         return '{0}{1}{0}\n{2}+{3}{4}'.format(GameStrings.Icons.regeneration, 
                                                 GameStrings.Text.regeneration_banner, 
                                                 CharactersGenerator.player.icon,
                                                 Characters.Pers.regeneration_value,
@@ -139,7 +139,7 @@ class Banners():
 
       # регенерация босса
       elif pers == False:
-         return '{0}{1}{0}\n{1}+{2}{3}'.format(GameStrings.Icons.regeneration, 
+         return '{0}{1}{0}\n{2}+{3}{4}'.format(GameStrings.Icons.regeneration, 
                                                 GameStrings.Text.regeneration_banner, 
                                                 CharactersGenerator.boss.icon,
                                                 Characters.Pers.regeneration_value,
@@ -236,10 +236,3 @@ class BossMessages():
                                                          InteractionParameters.Boss.sanya_sasha_health_up,
                                                          InteractionParameters.Boss.sanya_sasha_damage_up,
                                                          InteractionParameters.Boss.sanya_sasha_critical_up)                                       
-
-   def sasha_skill_message():
-      return '{0}-{1}{2}'.format(Characters.boss.icon, str(Fight.sanya_skill_damage), GameStrings.Text.sanya_skill_effect_text)
-
-
-   def temich_skill_stan_message():
-      return '{0}\n{1}+{2}'.format(GameStrings.Text.temich_skill_deffect_text, Characters.player.icon, GameStrings.Text.stan_banner)

@@ -1,14 +1,22 @@
 import random
 import Characters
+import PlayerStrings
 import BossStrings
+import DropStrings
 import CharactersGenerator
+import InteractionParameters
 import FightCycle
 import FightStrings
 
 class BossList():
-   list_easy = ['Палыч', 'Чайковский', 'Вив', 'Саша Шлякин', 'Качаловская Тварь', 'Рандом Рандомыч', 'Котенок-тролль']
-   list_medium = ['Инквизиция', 'Доктор Леха', 'Пьяный Леха', 'Мел', 'Рыжий', 'Следователь']
-   list_hard = ['Донер Кебаб', 'Черный Стас', 'Дрон', 'Валера Гладиатор', 'Великая Шива']
+   list_easy = [BossStrings.Palich.name, BossStrings.Chaikovskii.name, 
+               BossStrings.Viv.name, BossStrings.Sasha.name, BossStrings.Tvar.name, 
+               BossStrings.Randomich.name, BossStrings.Kitty.name]
+   list_medium = [BossStrings.Inkvisizia.name, BossStrings.DocLeha.name, 
+                  BossStrings.DrunkLeha.name, BossStrings.Mel.name, 
+                  BossStrings.Redhead.name, BossStrings.Sledovatel.name]
+   list_hard = [BossStrings.Doner.name, BossStrings.BlackStas.name, 
+               BossStrings.Dron.name, BossStrings.Glad.name, BossStrings.Shiva.name]
 
 def boss_difficult_choice(win_rate):
    global boss_name
@@ -26,48 +34,61 @@ def boss_difficult_choice(win_rate):
       boss_name = [BossStrings.Makar.name]
 
 def boss_prelude_skill_activation(boss_name):
+   # активация способности босса до боя
    global prelude_skill_message
    
    prelude_skill_message = False
 
-   if boss_name == MyStrings.Text.palich_name.value:
-      player.silence = True
-      prelude_skill_message = MyStrings.Text.palich_prelude_text.value
+   # Палыч
+   if boss_name == BossStrings.Palich.name:
+      CharactersGenerator.player.silence = True
+      prelude_skill_message = BossStrings.Palich.prelude_skill
 
-   elif boss_name == MyStrings.Text.redhead_name.value:
-      player.poison = True
-      prelude_skill_message = MyStrings.Text.redhead_prelude_text.value
+   # Рыжий
+   elif boss_name == BossStrings.Redhead.name:
+      CharactersGenerator.player.poison = True
+      prelude_skill_message = BossStrings.Redhead.prelude_skill
 
-   elif boss_name == MyStrings.Text.sledovatel_name.value:
-      drugs = MyStrings.Text.marki_name.value, MyStrings.Text.madam_name.value, MyStrings.Text.marki_name.value
-      cross_check = [x for x in drugs if x in player.all_items]
-      if player.damage > 500:
-         player.health_down_procent(50)
-         prelude_skill_message = MyStrings.Text.sledovatel_damage_prelude_text.value
-      elif player.mitya_elexir_count > 0 or len(cross_check) > 0:
-         player.police_level += 50
-         prelude_skill_message = MyStrings.Text.sledovatel_drugcheck_text.value
-      elif player.damage > 500 and player.mitya_elexir_count > 0 or len(cross_check) > 0:
-         player.health_down_procent(50)
-         player.police_level += 50
-         prelude_skill_message = MyStrings.Text.sledovatel_damage_prelude_text.value + '\n' + MyStrings.Text.sledovatel_drugcheck_text.value
+   # Следователь
+   elif boss_name == BossStrings.Sledovatel.name:
+      drugs = DropStrings.Buffs.marki_name, \
+               DropStrings.Items.madam_name, \
+                  DropStrings.Items.shiga_name
 
-   elif boss_name == MyStrings.Text.dron_name.value:
-      obida_level = 0
-      obida_level += len(player.all_items) * 5
-      prelude_skill_message = MyStrings.Text.dron_bratishki_text.value
-      if MyStrings.Text.dron_meat_name.value in player.all_items:
-         obida_level += 10
-         prelude_skill_message += '\n' + MyStrings.Text.dron_dron_meat_text.value
+      cross_check = [x for x in drugs if x in CharactersGenerator.player.all_items]
+      # снижение урона игрока, если его больше 500
+      if CharactersGenerator.player.damage > 500:
+         CharactersGenerator.player.damage_down_procent \
+            (InteractionParameters.Boss.sledovatel_damage_down)
+         prelude_skill_message = BossStrings.Sledovatel.damage_down_skill()
 
-   elif boss_name == MyStrings.Text.doner_name.value and MyStrings.Text.everlast_name.value in player.all_items:
-      boss.health_up_procent(10)
-      boss.damage_up_procent(10)
-      prelude_skill_message = MyStrings.Text.doner_everlast_text.value
+      # увеличение накопительной способности босса при заданных условиях
+      if CharactersGenerator.player.mitya_elexir_count > 0 or len(cross_check) > 0:
+         CharactersGenerator.player.police_wanted += \
+            InteractionParameters.Boss.sledovatel_drugs
+         prelude_skill_message += '\n' + BossStrings.Sledovatel.drugs_check()
 
-   elif boss_name == MyStrings.Text.black_stas_name.value and player.name == MyStrings.Text.mitya_name.value:
-      boss.damage_up(player.mitya_elexir_count * 200)
-      prelude_skill_message = MyStrings.Text.black_stas_mitya_text.value
+
+   elif boss_name == BossStrings.Dron.name:
+      CharactersGenerator.boss.skill_meter_level += \
+         len(CharactersGenerator.player.all_items) * 5
+      prelude_skill_message = BossStrings.Dron.bratishki_interaction()
+      if DropStrings.Buffs.dron_meat_name in CharactersGenerator.player.all_items:
+         CharactersGenerator.boss.skill_meter_level += \
+            CharactersGenerator.boss.skill_meter_level_up
+         prelude_skill_message += '\n' + BossStrings.Dron.dron_meat_interaction()
+
+   elif boss_name == BossStrings.Doner.name and \
+         DropStrings.Buffs.everlast_name in CharactersGenerator.player.all_items:
+      CharactersGenerator.boss.health_up_procent(InteractionParameters.Boss.doner_everlast)
+      CharactersGenerator.boss.damage_up_procent(InteractionParameters.Boss.doner_everlast)
+      prelude_skill_message = BossStrings.Doner.everlast_interaction()
+
+   elif boss_name == BossStrings.BlackStas.name and \
+         CharactersGenerator.player.name == PlayerStrings.Mitya.name:
+      CharactersGenerator.boss.damage_up(CharactersGenerator.player.mitya_elexir_count * 
+                                          CharactersGenerator.player.mitya_damage_up_skill_value)
+      prelude_skill_message = BossStrings.BlackStas.mitya_interaction
 
 def chance(x):
    # генератор вероятности
