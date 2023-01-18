@@ -75,15 +75,15 @@ def location_choice(location_name):
       Location.description = LocationStrings.GodCity.description()                     
 
       # применение эффекта локации 
-      CharactersGenerator.player.health_up_procent(CharactersGenerator.player, loc.health)
-      CharactersGenerator.player.damage_up_procent(CharactersGenerator.player, loc.damage)
-      CharactersGenerator.player.critical_chance_up(CharactersGenerator.player, loc.critical_chance)
+      CharactersGenerator.player.health_up_procent(loc.health)
+      CharactersGenerator.player.damage_up_procent(loc.damage)
+      CharactersGenerator.player.critical_chance_up(loc.critical_chance)
       
       # интерактив с боссом Чайковский
       if CharactersGenerator.boss.name == BossStrings.Chaikovskii.name:
-         CharactersGenerator.boss.health_up_procent(CharactersGenerator.boss, loc.health)
-         CharactersGenerator.boss.damage_up_procent(CharactersGenerator.boss, loc.damage)
-         CharactersGenerator.boss.critical_chance_up(CharactersGenerator.boss, loc.critical_chance)
+         CharactersGenerator.boss.health_up_procent(loc.health)
+         CharactersGenerator.boss.damage_up_procent(loc.damage)
+         CharactersGenerator.boss.critical_chance_up(loc.critical_chance)
          Location.pers_iteraction_message = BossStrings.Chaikovskii.god_city_interaction()
 
 
@@ -108,7 +108,6 @@ def location_choice(location_name):
       else:
          CharactersGenerator.player.health_down_procent(loc.health)
          CharactersGenerator.player.damage_down_procent(loc.damage)
-         Location.pers_iteraction_message = LocationStrings.BadTrip.description()
 
 
    # Молебка   

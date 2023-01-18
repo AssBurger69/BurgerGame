@@ -30,9 +30,10 @@ class Drochilnya():
    name = 'Дрочильня'
 
    def description():
-      return '{0}{1}\n{2}\n+{3}%{4}'.format(Locations.loc.name, Locations.loc.icon,
+      return '{0}{1}\n{2}\n+{3}%{4}\n+{5}%{6}'.format(Locations.loc.name, Locations.loc.icon,
                                                       'Тренировка в тесном мужском кругу лишней не бывает, да?',
-                                                      Locations.loc.damage, Locations.loc.critical_chance)
+                                                      Locations.loc.damage, GameStrings.Icons.damage,
+                                                      Locations.loc.critical_chance, GameStrings.Icons.critical_chance)
 
 
 class Molebka():

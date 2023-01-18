@@ -140,9 +140,11 @@ def stats_upgrade(message):
    # переход к подбору босса                           
    bot.register_next_step_handler(msg, boss_choice)
 
+
 def boss_choice(message):
    # выбор босса в зависимости от количества побед в боях
    FightFunctions.boss_difficult_choice(Characters.Player.win_rate)
+   print(Characters.Pers.win_rate)
 
    # назначение характеристик боссу
    CharactersGenerator.boss_get_stats(FightFunctions.boss_name)
@@ -191,13 +193,13 @@ def location(message):
 
 
 def start_fight(message):
+   
    # применение способности босса перед боем
    FightFunctions.boss_prelude_skill_activation(CharactersGenerator.boss.name)
 
    # сообщение с описанием способности босса перед боем, если она у него есть
    if FightFunctions.prelude_skill_message != False:
       bot.send_message(message.from_user.id, FightFunctions.prelude_skill_message)
-      FightFunctions.prelude_skill_message = False
 
    # проверка на наличие накопительной способности босса, 
    # вывод сообщения с процентом ее заполнения
@@ -298,11 +300,13 @@ def victory_check(message):
 
    # если игрок проиграл - сообщение о проигрыше
    elif CharactersGenerator.player.health <= 0: 
+      Characters.Pers.win_rate = 0
       bot.send_message(message.from_user.id, GameStrings.Text.game_over)
 
 def next_fight(message):
    # обнуление статусов игрока, повышение счетчика побед
    FightCycle.fight_victory()
+   bot.send_message(message.from_user.id, FightCycle.Attack_messages.toshik_passive_skill)
 
    # особое сообщение если игрок Саня победил босса Саша Шлякин
    if FightCycle.Attack_messages.sanya_win_sanya != False:

@@ -8,6 +8,8 @@ import GameStrings
 class Buff():
    # параметр увеличения здоровья игрока при посещении магазина Братишкино логово
    bratishki_health_up_value = 200
+
+   # тут присвоится описание активного баффа
    description = False
 
    # создание класса Бафф - предмета увеличивающего характеристики игрока моментально
@@ -23,14 +25,16 @@ class Item():
    # параметр увеличения атаки игрока при посещении магазина Серого Стаса
    stas_damage_up_value = 50
 
+   # тут присвоится описание активного итема
+   description = False
+
    # обнуление интерактивных сообщений при взаимодействии игрока/боссов с определенными предметами
    boss_iteraction_message = False
    player_iteraction_message = False
 
    # создание класса Итем - предмета с активацией только во время боя
-   def __init__(self, value, description):
+   def __init__(self, value):
       self.value = value
-      self.description = description
 
 
 def shop_enter(shop_name):

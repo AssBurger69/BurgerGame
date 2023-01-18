@@ -323,4 +323,4 @@ def fight_victory():
       CharactersGenerator.player.damage_up(CharactersGenerator.player.health 
                                              * CharactersGenerator.player.toshik_passive_skill_procent 
                                              // 100)
-      Attack_messages.messages_pool.append(PlayerStrings.Toshik.passive_effect())
+      Attack_messages.toshik_passive_skill(PlayerStrings.Toshik.passive_effect())

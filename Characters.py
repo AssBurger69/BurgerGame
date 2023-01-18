@@ -118,6 +118,7 @@ class Boss(Pers):
    resurrection = False
    bleeding = False
    poison = False
+   prelude_skill_message = False
    icon = GameStrings.Icons.boss
 
    # параметры способностей боссов в конце раунда
